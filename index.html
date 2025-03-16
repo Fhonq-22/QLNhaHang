@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Giỏ Hàng</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>🍽️ Cửa hàng thực phẩm</h1>
+        <div id="gio-hang-container">
+            <button id="btn-gio-hang">🛒 <span id="so-luong-gio-hang">0</span></button>
+        </div>
+    </header>
+
+    <main>
+        <div class="bo-loc">
+            <select id="chon-danh-muc">
+                <option value="tat-ca">Tất cả</option>
+            </select>
+            <input type="text" id="tim-kiem" placeholder="Tìm kiếm món ăn...">
+        </div>
+
+        <div class="danh-sach-mon-an" id="danh-sach-mon-an"></div>
+    </main>
+
+    <!-- Giỏ hàng (Popup) -->
+    <div id="overlay" class="hidden"></div>
+    <div id="gio-hang-popup" class="hidden">
+        <h2>🛒 Giỏ hàng</h2>
+        <ul id="gio-hang-chi-tiet"></ul>
+        <button id="dong-gio-hang">Đóng</button>
+    </div>
+
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+@import url("root.css");
+
+/* === HEADER === */
+header {
+    background-color: var(--mau-phu);
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: var(--do-bong);
+}
+
+#gio-hang-container {
+    position: relative;
+    display: inline-block;
+}
+
+#btn-gio-hang {
+    background-color: var(--mau-diem-nhan);
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: var(--bo-goc);
+    transition: 0.3s;
+}
+
+#btn-gio-hang:hover {
+    background-color: var(--mau-nut);
+}
+
+/* === BỘ LỌC === */
+.bo-loc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.bo-loc select, 
+.bo-loc input {
+    padding: 10px;
+    border: 2px solid var(--mau-chu-dao);
+    border-radius: var(--bo-goc);
+    font-size: 16px;
+    outline: none;
+}
+
+.bo-loc input {
+    width: 300px;
+}
+
+/* === DANH SÁCH MÓN ĂN === */
+.danh-sach-mon-an {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: var(--do-rong-max);
+    margin: auto;
+    padding: 20px;
+}
+
+/* === MÓN ĂN === */
+.mon-an {
+    background: white;
+    padding: 15px;
+    border-radius: var(--bo-goc);
+    box-shadow: var(--do-bong);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.mon-an:hover {
+    transform: scale(1.05);
+}
+
+/* === HÌNH ẢNH MÓN ĂN === */
+.mon-an img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: var(--bo-goc);
+}
+
+/* === TÊN MÓN ĂN === */
+.ten-mon {
+    font-size: 20px;
+    color: var(--mau-chu-dao);
+    margin: 10px 0;
+}
+
+/* === MÔ TẢ MÓN === */
+.mo-ta-mon {
+    font-size: 14px;
+    color: var(--mau-phu);
+    margin-bottom: 8px;
+}
+
+/* === GIÁ MÓN === */
+.gia-mon {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--mau-nut);
+}
+
+/* Nút "Thêm vào giỏ hàng" */
+.them-vao-gio {
+    background-color: var(--mau-diem-nhan);
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: var(--bo-goc);
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.them-vao-gio:hover {
+    background-color: var(--mau-nut);
+    transform: scale(1.05);
+}
+
+
+
+/* --------------------------- */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+}
+
+#gio-hang-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    width: 300px;
+    text-align: center;
+}
+
+#gio-hang-popup ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+#gio-hang-popup li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,68 @@
+@import url("root.css");
+
+/* === RESPONSIVE CHO TABLET === */
+@media (max-width: 1024px) {
+    .bo-loc {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .bo-loc select, 
+    .bo-loc input {
+        width: 90%;
+    }
+
+    .danh-sach-mon-an {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+    }
+}
+
+/* === RESPONSIVE CHO MOBILE === */
+@media (max-width: 768px) {
+    header {
+        font-size: 20px;
+        padding: 15px;
+    }
+
+    .bo-loc {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .bo-loc select, 
+    .bo-loc input {
+        width: 95%;
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .danh-sach-mon-an {
+        grid-template-columns: 1fr;
+        padding: 10px;
+    }
+
+    .mon-an {
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .mon-an img {
+        height: 150px;
+        border-radius: 8px;
+    }
+
+    .ten-mon {
+        font-size: 18px;
+    }
+
+    .mo-ta-mon {
+        font-size: 13px;
+    }
+
+    .gia-mon {
+        font-size: 16px;
+    }
+}
