@@ -167,3 +167,92 @@ header {
 .hidden {
     display: none !important;
 }
+
+/* === FORM ĐẶT MÓN === */
+#form-dat-mon {
+    max-width: 400px;
+    background: var(--mau-nen);
+    border-radius: var(--bo-goc);
+    box-shadow: var(--do-bong);
+    padding: 20px;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid var(--mau-chu-dao);
+}
+
+#form-dat-mon h2 {
+    color: var(--mau-chu-dao);
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+#form-dat-mon label {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: var(--mau-chu);
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+#form-dat-mon input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+#form-dat-mon input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--mau-chu-dao);
+    border-radius: var(--bo-goc);
+    font-size: 16px;
+    outline: none;
+    background: white;
+    transition: border-color 0.3s ease-in-out;
+    margin-bottom: 12px;
+}
+
+#form-dat-mon input:focus {
+    border-color: var(--mau-nut);
+}
+
+/* Định dạng cho input bị disabled */
+#form-dat-mon input:disabled {
+    background-color: #eee;
+    color: #777;
+    cursor: not-allowed;
+}
+
+/* === NÚT BẤM === */
+#form-dat-mon button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: var(--bo-goc);
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#xac-nhan-dat-mon {
+    background-color: var(--mau-nut);
+    color: white;
+    margin-bottom: 10px;
+}
+
+#xac-nhan-dat-mon:hover {
+    background-color: darkred;
+    transform: scale(1.05);
+}
+
+#huy-dat-mon {
+    background-color: var(--mau-diem-nhan);
+    color: var(--mau-chu);
+}
+
+#huy-dat-mon:hover {
+    background-color: rgb(255, 150, 100);
+    transform: scale(1.05);
+}

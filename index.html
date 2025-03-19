@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Giỏ Hàng</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 
     <header>
-        <h1>🍽️ Cửa hàng thực phẩm</h1>
+        <h1>🍽️ Sang Diego Pizza && Grill Thái Nguyên</h1>
         <div id="gio-hang-container">
             <button id="btn-gio-hang">🛒 <span id="so-luong-gio-hang">0</span></button>
         </div>
@@ -31,8 +32,20 @@
     <div id="gio-hang-popup" class="hidden">
         <h2>🛒 Giỏ hàng</h2>
         <ul id="gio-hang-chi-tiet"></ul>
+        <!-- Form Đặt Món (Ẩn Mặc Định) -->
+        <div id="form-dat-mon" class="hidden">
+            <h2>📦 Đặt Món</h2>
+            <label>
+                <input type="checkbox" id="tu-tao-ma"> Tự tạo mã đặt món
+            </label>
+            <input type="text" id="ma-dat-mon" placeholder="Nhập mã đặt món" disabled>
+            <input type="text" id="so-dien-thoai" placeholder="Nhập số điện thoại khách">
+            <button id="xac-nhan-dat-mon">Xác nhận đặt món</button>
+            <button id="huy-dat-mon">Hủy</button>
+        </div>
         <button id="dong-gio-hang">Đóng</button>
     </div>
+
 
     <script type="module" src="js/firebase-config.js"></script>
     <script type="module" src="js/main.js"></script>
