@@ -1,5 +1,5 @@
 import { database } from "./firebase-config.js";
-import { ref, get, set } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+import { ref, get, set, update } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const danhSachMonAn = document.getElementById("danh-sach-mon-an");
@@ -79,17 +79,40 @@ document.addEventListener("DOMContentLoaded", function () {
     // Đặt món
     btnXacNhanDatMon.addEventListener("click", async () => {
         const maDatMon = maDatMonInput.value.trim();
-        if (!maDatMon) return alert("Vui lòng nhập đầy đủ thông tin!");
-        const thoiGianDat = new Date().toISOString();
-        const tongTien = Object.entries(gioHang).reduce((sum, [_, soLuong]) => sum + (soLuong * 50000), 0);
+        if (!maDatMon) {
+            alert("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
         try {
+            const userRef = ref(database, `KhachHang/${username}`);
+            const userSnapshot = await get(userRef);
+            
+            if (!userSnapshot.exists()) {
+                alert("Không tìm thấy thông tin khách hàng!");
+                return;
+            }
+    
+            const userData = userSnapshot.val();
+            const address = userData.DiaChi?.trim();
+    
+            if (!address) {
+                alert("Bạn cần thêm địa chỉ để chúng tôi có thể giao đơn đặt!");
+                return;
+            }
+    
+            const thoiGianDat = new Date().toISOString();
+            const tongTien = Object.entries(gioHang).reduce((sum, [_, soLuong]) => sum + (soLuong * 50000), 0);
+    
+            // 🔹 Tiến hành đặt món
             await set(ref(database, `DatMon/${maDatMon}`), {
                 MaKhach: username,
                 ThoiGianDat: thoiGianDat,
                 DanhSachMon: { ...gioHang },
                 TongTien: tongTien,
+                DiaChi: address, // Lưu địa chỉ lấy từ Firebase
                 TrangThai: "Đang xử lý",
             });
+    
             alert("Đặt món thành công!");
             gioHang = {};
             luuGioHang();
@@ -100,6 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Lỗi khi đặt món, vui lòng thử lại.");
         }
     });
+    
     btnHuyDatMon.addEventListener("click", () => formDatMon.classList.add("hidden"));
 
     tuTaoMaCheckbox.addEventListener("change", () => {
@@ -183,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         // Đổ dữ liệu vào form
                         document.getElementById("ho-ten").value = userData.HoTen || "";
-                        document.getElementById("ngay-sinh").value = userData.NgaySinh || "";
+                        document.getElementById("ngay-sinh").value = userData.NgaySinh.split("T")[0] || "";
                         document.getElementById("dia-chi").value = userData.DiaChi || "";
                         document.getElementById("mon-yeu-thich").value = userData.MonYeuThich || "";
                         document.getElementById("hang-thanh-vien").value = userData.HangThanhVien || "";
@@ -207,22 +231,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Cập nhật thông tin
     document.getElementById("btn-cap-nhat").addEventListener("click", function () {
+        if (!username) {
+            alert("Bạn cần đăng nhập để cập nhật thông tin!");
+            return;
+        }
+    
         const updatedData = {
             HoTen: document.getElementById("ho-ten").value,
-            NgaySinh: document.getElementById("ngay-sinh").value,
+            NgaySinh: document.getElementById("ngay-sinh").value + "T00:00:00",
             DiaChi: document.getElementById("dia-chi").value,
             MonYeuThich: document.getElementById("mon-yeu-thich").value,
         };
-
-        console.log("Thông tin cập nhật:", updatedData);
-        alert("Cập nhật thành công!");
+    
+        const userRef = ref(database, `KhachHang/${username}`);
+    
+        update(userRef, updatedData)
+            .then(() => {
+                alert("Cập nhật thông tin thành công!");
+                console.log("Thông tin đã cập nhật:", updatedData);
+            })
+            .catch((error) => {
+                console.error("Lỗi khi cập nhật thông tin:", error);
+                alert("Lỗi khi cập nhật, vui lòng thử lại.");
+            });
     });
 
     // Xử lý đăng xuất
     document.getElementById("btn-logout").addEventListener("click", function () {
         localStorage.removeItem("username"); // Xoá username khỏi localStorage
         userModal.style.display = "none"; // Đóng modal
-        window.location.href = "auth.html"; // Chuyển về trang đăng nhập
+        location.reload();
     });
 
     layDanhSachDanhMuc();

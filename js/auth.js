@@ -67,7 +67,20 @@ document.addEventListener("DOMContentLoaded", function () {
                         alert(`Đăng nhập thành công! Vai trò: ${userData.VaiTro}`);
                         //window.location.href = "../index.html";
                         localStorage.setItem("username", username);
-                        window.location.href = "index.html";
+                        switch (userData.VaiTro) {
+                            case "Khách hàng": 
+                                window.location.href = "index.html";
+                                break;
+                            case "Nhân viên": 
+                                window.location.href = "nhanvien.html";
+                                break;
+                            case "Admin": 
+                                window.location.href = "admin.html";
+                                break;
+                            default:
+                                alert("Vai trò không hợp lệ!");
+                                break;
+                        }
                     } else {
                         alert("Sai mật khẩu!");
                     }
