@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập / Đăng Ký</title>
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="login-form">
+            <h2 id="tieu-de-form">Đăng Nhập</h2>
+
+            <form id="form-xac-thuc">
+                <div class="input-group">
+                    <label for="ten-dang-nhap">Tên đăng nhập</label>
+                    <input type="text" id="ten-dang-nhap" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="mat-khau">Mật khẩu</label>
+                    <input type="password" id="mat-khau" required>
+                </div>
+
+                <div id="register-fields" class="hidden">
+                    <div class="input-group">
+                        <label for="xac-nhan-mat-khau">Xác nhận mật khẩu</label>
+                        <input type="password" id="xac-nhan-mat-khau">
+                    </div>
+                </div>
+
+                <button type="submit" id="nut-hanh-dong" class="btn-primary">Đăng Nhập</button>
+
+                <p class="toggle-text">
+                    Chưa có tài khoản? <a href="#" id="chuyen-sang-dang-ky">Đăng ký ngay</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+</body>
+</html>

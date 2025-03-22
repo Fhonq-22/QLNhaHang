@@ -1,0 +1,119 @@
+@import url("root.css");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-chinh);
+}
+
+body {
+    background-color: var(--mau-nen);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Khung chính của form */
+.container {
+    background: white;
+    padding: 35px;
+    border-radius: var(--bo-goc);
+    box-shadow: var(--do-bong);
+    width: 400px;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Tiêu đề */
+.container h2 {
+    color: var(--mau-chu-dao);
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Nhóm input */
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: var(--mau-chu-dao);
+}
+
+/* Ô nhập liệu */
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--mau-phu);
+    border-radius: var(--bo-goc);
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hiệu ứng focus */
+.input-group input:focus {
+    border-color: var(--mau-diem-nhan);
+    box-shadow: 0 0 8px rgba(255, 190, 88, 0.6);
+}
+
+/* Nút đăng nhập / đăng ký */
+.btn-primary {
+    background-color: var(--mau-nut);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: var(--bo-goc);
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hiệu ứng hover */
+.btn-primary:hover {
+    background: rgb(230, 90, 80);
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(255, 120, 100, 0.4);
+}
+
+/* Chuyển đổi giữa đăng nhập và đăng ký */
+.toggle-text {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.toggle-text a {
+    color: var(--mau-chu-dao);
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.toggle-text a:hover {
+    color: var(--mau-diem-nhan);
+    text-decoration: underline;
+}
+
+/* Ẩn form đăng ký */
+.hidden {
+    display: none;
+}
+
+/* Hiệu ứng fade in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

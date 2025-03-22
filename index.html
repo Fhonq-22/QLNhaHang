@@ -14,6 +14,9 @@
         <div id="gio-hang-container">
             <button id="btn-gio-hang">🛒 <span id="so-luong-gio-hang">0</span></button>
         </div>
+        <div id="user-info">
+            <button id="btn-user" onclick="handleUserClick()">🔑 Đăng nhập</button>
+        </div>
     </header>
 
     <main>
@@ -39,12 +42,43 @@
                 <input type="checkbox" id="tu-tao-ma"> Tự tạo mã đặt món
             </label>
             <input type="text" id="ma-dat-mon" placeholder="Nhập mã đặt món" disabled>
-            <input type="text" id="so-dien-thoai" placeholder="Nhập số điện thoại khách">
             <button id="xac-nhan-dat-mon">Xác nhận đặt món</button>
             <button id="huy-dat-mon">Hủy</button>
         </div>
         <button id="dong-gio-hang">Đóng</button>
     </div>
+
+    <!-- Form thông tin người dùng (ẩn ban đầu) -->
+    <div id="user-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Thông Tin Tài Khoản</h2>
+            <label>Họ và tên:</label>
+            <input type="text" id="ho-ten">
+
+            <label>Ngày sinh:</label>
+            <input type="date" id="ngay-sinh">
+
+            <label>Địa chỉ:</label>
+            <input type="text" id="dia-chi">
+
+            <label>Món yêu thích:</label>
+            <input type="text" id="mon-yeu-thich">
+
+            <label>Hạng thành viên:</label>
+            <input type="text" id="hang-thanh-vien" disabled>
+
+            <label>Điểm tích lũy:</label>
+            <input type="number" id="diem-tich-luy" disabled>
+
+            <label>Tổng chi tiêu:</label>
+            <input type="text" id="tong-chi-tieu" disabled>
+
+            <button id="btn-cap-nhat">💾 Cập Nhật</button>
+            <button id="btn-logout">🚪 Đăng Xuất</button>
+        </div>
+    </div>
+
 
 
     <script type="module" src="js/firebase-config.js"></script>
