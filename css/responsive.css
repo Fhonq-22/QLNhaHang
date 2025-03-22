@@ -66,3 +66,62 @@
         font-size: 16px;
     }
 }
+
+
+/* === RESPONSIVE CHO TABLET === */
+@media (max-width: 1024px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-info, .footer-social, .footer-map {
+        width: 100%;
+        padding: 15px 0;
+    }
+
+    .footer-map iframe {
+        height: 200px;
+    }
+}
+
+/* === RESPONSIVE CHO MOBILE === */
+@media (max-width: 768px) {
+    footer {
+        padding: 15px 0;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-info, .footer-social, .footer-map {
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    .footer-social a {
+        font-size: 14px;
+    }
+
+    .footer-map iframe {
+        width: 90%;
+        height: 180px;
+    }
+
+    .footer-bottom {
+        font-size: 12px;
+        padding: 10px;
+    }
+}
+
+
+/* Responsive cho mobile */
+@media (max-width: 500px) {
+    .modal-content {
+        width: 95%;
+    }
+}

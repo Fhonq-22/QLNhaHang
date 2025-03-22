@@ -46,9 +46,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Giỏ hàng
     function themVaoGioHang(maMon) {
+        let btnDatMon = document.querySelector(`.them-vao-gio[data-mamon="${maMon}"]`);
+        let gioHangIcon = document.querySelector("#btn-gio-hang");
+    
+        if (!btnDatMon || !gioHangIcon) {
+            console.error("LỖI: Không tìm thấy phần tử!");
+            return;
+        }
+    
+        // Cập nhật giỏ hàng
         gioHang[maMon] = (gioHang[maMon] || 0) + 1;
         luuGioHang();
-    }
+    
+        // Lấy vị trí bắt đầu và kết thúc
+        let rectStart = btnDatMon.getBoundingClientRect();
+        let rectEnd = gioHangIcon.getBoundingClientRect();
+    
+        // Tạo icon bay
+        let flyItem = document.createElement("span");
+        flyItem.classList.add("fly-item");
+        flyItem.innerText = "🛒"; // Hoặc dùng hình ảnh sản phẩm nếu muốn
+        document.body.appendChild(flyItem);
+    
+        // Đặt vị trí ban đầu
+        flyItem.style.left = rectStart.left + "px";
+        flyItem.style.top = rectStart.top + "px";
+    
+        // Thêm hiệu ứng bay
+        setTimeout(() => {
+            flyItem.style.transform = `translate(${rectEnd.left - rectStart.left}px, ${rectEnd.top - rectStart.top}px) scale(0.3)`;
+            flyItem.style.opacity = "0";
+        }, 50);
+    
+        // Xóa sau khi hiệu ứng hoàn tất
+        setTimeout(() => {
+            flyItem.remove();
+        }, 1500);
+    }    
+    
     function hienThiGioHang() {
         gioHangChiTiet.innerHTML = Object.keys(gioHang).length === 0
             ? "<li>Giỏ hàng trống</li>"
@@ -159,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <img src="${monAn.HinhAnh}" alt="${monAn.TenMon}">
                         <h3>${monAn.TenMon}</h3>
                         <p>${monAn.MoTa}</p>
-                        <p>${monAn.Gia} VND</p>
+                        <p>${monAn.Gia.toLocaleString('vi-VN')} VND</p>
                         <button class="them-vao-gio" data-mamon="${maMon}">Thêm vào giỏ hàng</button>`;
                         fragment.appendChild(monAnDiv);
                     }
@@ -196,7 +231,8 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = "auth.html"; // Chuyển đến trang đăng nhập nếu chưa đăng nhập
         } else {
             // Hiển thị modal thông tin tài khoản
-            userModal.style.display = "block";
+            userModal.style.display = "flex";
+            userModal.classList.add("show");
 
             const userRef = ref(database, `KhachHang/${username}`);
 
@@ -227,6 +263,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Xử lý đóng modal
     closeModal.addEventListener("click", function () {
         userModal.style.display = "none";
+        userModal.classList.remove("show");
+
     });
 
     // Cập nhật thông tin

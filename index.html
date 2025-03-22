@@ -1,41 +1,47 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Giỏ Hàng</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/order.css">
     <link rel="stylesheet" href="css/responsive.css">
+
 </head>
+
 <body>
 
     <header>
-        <h1>🍽️ Sang Diego Pizza && Grill Thái Nguyên</h1>
-        <div id="gio-hang-container">
-            <button id="btn-gio-hang">🛒 <span id="so-luong-gio-hang">0</span></button>
-        </div>
-        <div id="user-info">
-            <button id="btn-user" onclick="handleUserClick()">🔑 Đăng nhập</button>
+        <h3>🍽️ Đặt món - Online</h3>
+        <div class="header-buttons">
+            <div class="bo-loc">
+                <select id="chon-danh-muc">
+                    <option value="tat-ca">Tất cả</option>
+                </select>
+                <input type="text" id="tim-kiem" placeholder="Tìm kiếm món ăn...">
+            </div>
+
+            <div id="gio-hang-container">
+                <button id="btn-gio-hang">🛒 <span id="so-luong-gio-hang">0</span></button>
+            </div>
+            <div id="user-info">
+                <button id="btn-user" onclick="handleUserClick()">🔑 Đăng nhập</button>
+            </div>
         </div>
     </header>
 
     <main>
-        <div class="bo-loc">
-            <select id="chon-danh-muc">
-                <option value="tat-ca">Tất cả</option>
-            </select>
-            <input type="text" id="tim-kiem" placeholder="Tìm kiếm món ăn...">
+        <div class="danh-sach-mon-an" id="danh-sach-mon-an"></div>
+
+        <div id="overlay" class="hidden"></div>
+        <div id="gio-hang-popup" class="hidden">
+            <h2>🛒 Giỏ hàng</h2>
+            <ul id="gio-hang-chi-tiet"></ul>
+
+            <button id="dong-gio-hang">Đóng</button>
         </div>
 
-        <div class="danh-sach-mon-an" id="danh-sach-mon-an"></div>
-    </main>
-
-    <!-- Giỏ hàng (Popup) -->
-    <div id="overlay" class="hidden"></div>
-    <div id="gio-hang-popup" class="hidden">
-        <h2>🛒 Giỏ hàng</h2>
-        <ul id="gio-hang-chi-tiet"></ul>
-        <!-- Form Đặt Món (Ẩn Mặc Định) -->
         <div id="form-dat-mon" class="hidden">
             <h2>📦 Đặt Món</h2>
             <label>
@@ -45,43 +51,83 @@
             <button id="xac-nhan-dat-mon">Xác nhận đặt món</button>
             <button id="huy-dat-mon">Hủy</button>
         </div>
-        <button id="dong-gio-hang">Đóng</button>
-    </div>
 
-    <!-- Form thông tin người dùng (ẩn ban đầu) -->
-    <div id="user-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Thông Tin Tài Khoản</h2>
-            <label>Họ và tên:</label>
-            <input type="text" id="ho-ten">
+        <div id="user-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Thông Tin Tài Khoản</h2>
 
-            <label>Ngày sinh:</label>
-            <input type="date" id="ngay-sinh">
+                <div class="input-group">
+                    <label>Họ và tên:</label>
+                    <input type="text" id="ho-ten">
+                </div>
+                <div class="input-group">
+                    <label>Ngày sinh:</label>
+                    <input type="date" id="ngay-sinh">
+                </div>
 
-            <label>Địa chỉ:</label>
-            <input type="text" id="dia-chi">
+                <div class="input-group">
+                    <label>Địa chỉ:</label>
+                    <input type="text" id="dia-chi">
+                </div>
+                <div class="input-group">
+                    <label>Món yêu thích:</label>
+                    <input type="text" id="mon-yeu-thich">
+                </div>
 
-            <label>Món yêu thích:</label>
-            <input type="text" id="mon-yeu-thich">
+                <div class="input-group">
+                    <label>Hạng thành viên:</label>
+                    <input type="text" id="hang-thanh-vien" disabled>
+                </div>
+                <div class="input-group">
+                    <label>Điểm tích lũy:</label>
+                    <input type="number" id="diem-tich-luy" disabled>
+                </div>
 
-            <label>Hạng thành viên:</label>
-            <input type="text" id="hang-thanh-vien" disabled>
+                <div class="input-group">
+                    <label>Tổng chi tiêu:</label>
+                    <input type="text" id="tong-chi-tieu" disabled>
+                </div>
 
-            <label>Điểm tích lũy:</label>
-            <input type="number" id="diem-tich-luy" disabled>
-
-            <label>Tổng chi tiêu:</label>
-            <input type="text" id="tong-chi-tieu" disabled>
-
-            <button id="btn-cap-nhat">💾 Cập Nhật</button>
-            <button id="btn-logout">🚪 Đăng Xuất</button>
+                <button id="btn-cap-nhat">💾 Cập Nhật</button>
+                <button id="btn-logout">🚪 Đăng Xuất</button>
+            </div>
         </div>
-    </div>
+    </main>
 
+    <footer>
+        <div class="footer-container">
+            <div class="footer-info">
+                <h3>🍕 Sang Diego Pizza & Grill</h3>
+                <p>📍 Địa chỉ: 123 Đường ABC, TP. Thái Nguyên</p>
+                <p>📞 Hotline: 0987 654 321</p>
+                <p>📧 Email: contact@sangdiego.vn</p>
+                <p>🕒 Giờ mở cửa: 10:00 - 22:00 hàng ngày</p>
+            </div>
 
+            <div class="footer-social">
+                <h3>Kết nối với chúng tôi</h3>
+                <a href="https://facebook.com" target="_blank">🌐 Facebook</a>
+                <a href="https://instagram.com" target="_blank">📸 Instagram</a>
+                <a href="https://tiktok.com" target="_blank">🎵 TikTok</a>
+            </div>
+
+            <div class="footer-map">
+                <h3>Bản đồ</h3>
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.168568661553!2d105.80003251540209!3d21.024424293197537!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac730f835bdf%3A0xbee41a3c8b6c5a72!2sTh%C3%A1i%20Nguy%C3%AAn%2C%20Vietnam!5e0!3m2!1sen!2s!4v1623323723646!5m2!1sen!2s"
+                    width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sang Diego Pizza & Grill - Thái Nguyên. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script type="module" src="js/firebase-config.js"></script>
-    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/order.js"></script>
 </body>
+
 </html>
