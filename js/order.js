@@ -48,42 +48,42 @@ document.addEventListener("DOMContentLoaded", function () {
     function themVaoGioHang(maMon) {
         let btnDatMon = document.querySelector(`.them-vao-gio[data-mamon="${maMon}"]`);
         let gioHangIcon = document.querySelector("#btn-gio-hang");
-    
+
         if (!btnDatMon || !gioHangIcon) {
             console.error("LỖI: Không tìm thấy phần tử!");
             return;
         }
-    
-        // Cập nhật giỏ hàng
-        gioHang[maMon] = (gioHang[maMon] || 0) + 1;
-        luuGioHang();
-    
+
+
+
         // Lấy vị trí bắt đầu và kết thúc
         let rectStart = btnDatMon.getBoundingClientRect();
         let rectEnd = gioHangIcon.getBoundingClientRect();
-    
+
         // Tạo icon bay
         let flyItem = document.createElement("span");
         flyItem.classList.add("fly-item");
         flyItem.innerText = "🛒"; // Hoặc dùng hình ảnh sản phẩm nếu muốn
         document.body.appendChild(flyItem);
-    
+
         // Đặt vị trí ban đầu
         flyItem.style.left = rectStart.left + "px";
         flyItem.style.top = rectStart.top + "px";
-    
+
         // Thêm hiệu ứng bay
         setTimeout(() => {
             flyItem.style.transform = `translate(${rectEnd.left - rectStart.left}px, ${rectEnd.top - rectStart.top}px) scale(0.3)`;
             flyItem.style.opacity = "0";
-        }, 50);
-    
+        }, 100);
+
         // Xóa sau khi hiệu ứng hoàn tất
         setTimeout(() => {
             flyItem.remove();
+            gioHang[maMon] = (gioHang[maMon] || 0) + 1;
+            luuGioHang();
         }, 1500);
-    }    
-    
+    }
+
     function hienThiGioHang() {
         gioHangChiTiet.innerHTML = Object.keys(gioHang).length === 0
             ? "<li>Giỏ hàng trống</li>"
@@ -121,23 +121,23 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const userRef = ref(database, `KhachHang/${username}`);
             const userSnapshot = await get(userRef);
-            
+
             if (!userSnapshot.exists()) {
                 alert("Không tìm thấy thông tin khách hàng!");
                 return;
             }
-    
+
             const userData = userSnapshot.val();
             const address = userData.DiaChi?.trim();
-    
+
             if (!address) {
                 alert("Bạn cần thêm địa chỉ để chúng tôi có thể giao đơn đặt!");
                 return;
             }
-    
+
             const thoiGianDat = new Date().toISOString();
             const tongTien = Object.entries(gioHang).reduce((sum, [_, soLuong]) => sum + (soLuong * 50000), 0);
-    
+
             // 🔹 Tiến hành đặt món
             await set(ref(database, `DatMon/${maDatMon}`), {
                 MaKhach: username,
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 DiaChi: address, // Lưu địa chỉ lấy từ Firebase
                 TrangThai: "Đang xử lý",
             });
-    
+
             alert("Đặt món thành công!");
             gioHang = {};
             luuGioHang();
@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Lỗi khi đặt món, vui lòng thử lại.");
         }
     });
-    
+
     btnHuyDatMon.addEventListener("click", () => formDatMon.classList.add("hidden"));
 
     tuTaoMaCheckbox.addEventListener("change", () => {
@@ -273,16 +273,16 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Bạn cần đăng nhập để cập nhật thông tin!");
             return;
         }
-    
+
         const updatedData = {
             HoTen: document.getElementById("ho-ten").value,
             NgaySinh: document.getElementById("ngay-sinh").value + "T00:00:00",
             DiaChi: document.getElementById("dia-chi").value,
             MonYeuThich: document.getElementById("mon-yeu-thich").value,
         };
-    
+
         const userRef = ref(database, `KhachHang/${username}`);
-    
+
         update(userRef, updatedData)
             .then(() => {
                 alert("Cập nhật thông tin thành công!");
