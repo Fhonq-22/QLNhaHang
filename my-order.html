@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn hàng của tôi</title>
+    <link rel="stylesheet" href="css/my-order.css">
+</head>
+
+<body>
+    <h1>Đơn hàng của tôi</h1>
+    <button id="btn-dat-mon">🛒</button>
+    <label>
+        <input type="checkbox" id="filter-online">
+        Chỉ hiển thị đơn đặt online của tôi
+    </label>
+    
+    <div id="don-hang-container"></div>
+
+    <!-- Modal hiển thị tiến trình giao đơn -->
+    <div id="tracking-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Tiến trình giao món ăn</h2>
+            <div id="tracking-timeline"></div>
+            <p id="tracking-message" class="tracking-message"></p>
+        </div>
+    </div>
+    
+    <script type="module" src="js/my-order.js"></script>
+</body>
+
+</html>

@@ -16,7 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const tuTaoMaCheckbox = document.getElementById("tu-tao-ma");
     const btnXacNhanDatMon = document.getElementById("xac-nhan-dat-mon");
     const btnHuyDatMon = document.getElementById("huy-dat-mon");
-    const userInfo = document.getElementById("btn-user");
+    const lichSuContainer = document.getElementById("lich-su-container");
+    const btnUser = document.getElementById("btn-user");
 
     const username = localStorage.getItem("username");
     async function kiemTraDangNhap() {
@@ -24,7 +25,8 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const snapshot = await get(ref(database, `Users/${username}`));
             if (snapshot.exists()) {
-                userInfo.textContent = `👤 ${username}`;
+                btnUser.textContent = `👤 ${username}`;
+                lichSuContainer.style.display = "inline-block";
             } else {
                 localStorage.removeItem("username");
             }
@@ -141,6 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // 🔹 Tiến hành đặt món
             await set(ref(database, `DatMon/${maDatMon}`), {
                 MaKhach: username,
+                NguoiLap: username,
                 ThoiGianDat: thoiGianDat,
                 DanhSachMon: { ...gioHang },
                 TongTien: tongTien,
@@ -300,6 +303,10 @@ document.addEventListener("DOMContentLoaded", function () {
         userModal.style.display = "none"; // Đóng modal
         location.reload();
     });
+
+    document.getElementById("btn-lich-su").addEventListener("click", function () {
+        window.location.href = "my-order.html";
+    });    
 
     layDanhSachDanhMuc();
     layDanhSachMonAn();
