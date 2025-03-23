@@ -1,0 +1,43 @@
+@import url("root.css");
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.error-code {
+    font-size: 6rem;
+    font-weight: bold;
+    color: var(--mau-diem-nhan);
+    text-shadow: var(--do-bong);
+}
+
+.error-message {
+    font-size: 1.5rem;
+    margin: 10px 0;
+}
+
+.error-image {
+    width: 300px;
+    height: auto;
+    margin: 20px 0;
+}
+
+.back-home {
+    background-color: var(--mau-nut);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: var(--bo-goc);
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.back-home:hover {
+    background-color: darkred;
+}

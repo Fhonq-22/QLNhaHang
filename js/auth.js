@@ -1,6 +1,8 @@
 import { database } from "./firebase-config.js";
 import { ref, set, get, child } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
+import { kiemTraChuyenHuong } from './kiemTraDuongDan.js';
+
 document.addEventListener("DOMContentLoaded", function () {
     const formXacThuc = document.getElementById("form-xac-thuc");
     const nutHanhDong = document.getElementById("nut-hanh-dong");
@@ -15,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.getElementById("tieu-de-form").textContent = dangNhap ? "Đăng Nhập" : "Đăng Ký";
         nutHanhDong.textContent = dangNhap ? "Đăng Nhập" : "Đăng Ký";
+        document.querySelector('label[for="ten-dang-nhap"]').textContent = dangNhap ? "Tên đăng nhập": "Số điện thoại đăng ký";
         truongDangKy.classList.toggle("hidden");
         chuyenSangDangKy.innerHTML = dangNhap
             ? "Chưa có tài khoản? <a href='#'>Đăng ký ngay</a>"
@@ -30,6 +33,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!username || !password) {
             alert("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+        const soDienThoaiRegex = /^(0\d{9,10})$/;
+        const dauSoNhaMang = [
+            "086", "096", "097", "098", // Viettel
+            "089", "090", "093",        // MobiFone
+            "088", "091", "094",        // VinaPhone
+            "092",                      // Vietnamobile
+            "056", "058",               // Vietnamobile (mới)
+            "032", "033", "034", "035", "036", "037", "038", "039" // Viettel (11 số đổi về 10 số)
+        ];
+        
+        if (!dangNhap && (!soDienThoaiRegex.test(username) || !dauSoNhaMang.some(dauSo => username.startsWith(dauSo)))) {
+            alert("Số điện thoại không hợp lệ hoặc không thuộc nhà mạng Việt Nam!");
             return;
         }
 
@@ -55,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
                 alert("Đăng ký thành công!");
+                chuyenSangDangKy.click();
             } catch (error) {
                 alert("Lỗi đăng ký: " + error.message);
             }
@@ -69,13 +87,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         localStorage.setItem("username", username);
                         switch (userData.VaiTro) {
                             case "Khách hàng": 
-                                window.location.href = "index.html";
+                                kiemTraChuyenHuong("index.html");
                                 break;
                             case "Nhân viên": 
-                                window.location.href = "nhanvien.html";
+                                kiemTraChuyenHuong("nhanvien.html");
                                 break;
                             case "Admin": 
-                                window.location.href = "admin.html";
+                                kiemTraChuyenHuong("admin.html");
                                 break;
                             default:
                                 alert("Vai trò không hợp lệ!");

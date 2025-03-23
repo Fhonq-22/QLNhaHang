@@ -20,20 +20,36 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnUser = document.getElementById("btn-user");
 
     const username = localStorage.getItem("username");
+
     async function kiemTraDangNhap() {
-        if (!username) return;
+        if (!username) {
+            return;
+        }
+
         try {
             const snapshot = await get(ref(database, `Users/${username}`));
             if (snapshot.exists()) {
-                btnUser.textContent = `👤 ${username}`;
+                const userData = snapshot.val();
+                const role = userData.VaiTro || "Khách hàng"; // Mặc định nếu không có role
+
+                if (role !== "Khách hàng") {
+                    alert("Bạn không có quyền truy cập! Vui lòng đăng nhập với tài khoản khách hàng.");
+                    localStorage.removeItem("username");
+                    return;
+                }
+
+                btnUser.innerHTML = `<i class="material-icons">face</i> ${username}`;
                 lichSuContainer.style.display = "inline-block";
+
             } else {
+                alert("Tài khoản không tồn tại! Tự động đăng xuất.");
                 localStorage.removeItem("username");
             }
         } catch (error) {
             console.error("Lỗi khi lấy thông tin người dùng:", error);
         }
     }
+
     kiemTraDangNhap();
 
     // Local Storage - Giỏ hàng
@@ -198,7 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <h3>${monAn.TenMon}</h3>
                         <p>${monAn.MoTa}</p>
                         <p>${monAn.Gia.toLocaleString('vi-VN')} VND</p>
-                        <button class="them-vao-gio" data-mamon="${maMon}">Thêm vào giỏ hàng</button>`;
+                        <button class="them-vao-gio" data-mamon="${maMon}"><i class="material-icons">add_shopping_cart</i> Thêm vào giỏ hàng</button>`;
                         fragment.appendChild(monAnDiv);
                     }
                 });
@@ -306,7 +322,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("btn-lich-su").addEventListener("click", function () {
         window.location.href = "my-order.html";
-    });    
+    });
 
     layDanhSachDanhMuc();
     layDanhSachMonAn();

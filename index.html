@@ -7,6 +7,7 @@
     <title>Quản lý Giỏ Hàng</title>
     <link rel="stylesheet" href="css/order.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 </head>
 
@@ -20,13 +21,20 @@
             </div>
 
             <div id="gio-hang-container">
-                <button id="btn-gio-hang">🛒 <span id="so-luong-gio-hang">0</span></button>
+                <button id="btn-gio-hang">
+                    <i class="material-icons">shopping_cart</i>
+                    <span id="so-luong-gio-hang">0</span>
+                </button>
             </div>
             <div id="lich-su-container" style="display: none;">
-                <button id="btn-lich-su">📜</button>
+                <button id="btn-lich-su">
+                    <i class="material-icons">history</i>
+                </button>
             </div>
             <div id="user-info">
-                <button id="btn-user" onclick="handleUserClick()">🔑 Đăng nhập</button>
+                <button id="btn-user" onclick="handleUserClick()">
+                    <i class="material-icons">account_circle</i>
+                </button>
             </div>
         </div>
     </header>
@@ -63,39 +71,57 @@
                 <h2>Thông Tin Tài Khoản</h2>
 
                 <div class="input-group">
-                    <label>Họ và tên:</label>
+                    <label>
+                        <i class="material-icons">person</i>Họ và tên:
+                    </label>
                     <input type="text" id="ho-ten">
                 </div>
                 <div class="input-group">
-                    <label>Ngày sinh:</label>
+                    <label>
+                        <i class="material-icons">calendar_today</i>Ngày sinh:
+                    </label>
                     <input type="date" id="ngay-sinh">
                 </div>
 
                 <div class="input-group">
-                    <label>Địa chỉ:</label>
+                    <label>
+                        <i class="material-icons">location_on</i>Địa chỉ:
+                    </label>
                     <input type="text" id="dia-chi">
                 </div>
                 <div class="input-group">
-                    <label>Món yêu thích:</label>
+                    <label>
+                        <i class="material-icons">favorite</i>Món yêu thích:
+                    </label>
                     <input type="text" id="mon-yeu-thich">
                 </div>
 
                 <div class="input-group">
-                    <label>Hạng thành viên:</label>
+                    <label>
+                        <i class="material-icons">workspace_premium</i>Hạng thành viên:
+                    </label>
                     <input type="text" id="hang-thanh-vien" disabled>
                 </div>
                 <div class="input-group">
-                    <label>Điểm tích lũy:</label>
+                    <label>
+                        <i class="material-icons">star</i>Điểm tích lũy:
+                    </label>
                     <input type="number" id="diem-tich-luy" disabled>
                 </div>
 
                 <div class="input-group">
-                    <label>Tổng chi tiêu:</label>
+                    <label>
+                        <i class="material-icons">payments</i>Tổng chi tiêu:
+                    </label>
                     <input type="text" id="tong-chi-tieu" disabled>
                 </div>
 
-                <button id="btn-cap-nhat">💾 Cập Nhật</button>
-                <button id="btn-logout">🚪 Đăng Xuất</button>
+                <button id="btn-cap-nhat">
+                    <i class="material-icons">update</i> Cập Nhật
+                </button>
+                <button id="btn-logout">
+                    <i class="material-icons">logout</i> Đăng Xuất
+                </button>
             </div>
         </div>
     </main>
@@ -104,17 +130,31 @@
         <div class="footer-container">
             <div class="footer-info">
                 <h3>🍕 Sang Diego Pizza & Grill</h3>
-                <p>📍 Địa chỉ: 305 Lương Ngọc Quyến, Hoàng Văn Thụ, TP.Thái Nguyên</p>
-                <p>📞 Hotline: 0208 730 0068</p>
-                <p>📧 Email: contact@sangdiego.vn</p>
-                <p>🕒 Giờ mở cửa: 08:00 - 22:30 hàng ngày</p>
+                <p>
+                    <i class="material-icons">pin_drop</i> Địa chỉ: 305 Lương Ngọc Quyến, Hoàng Văn Thụ, TP.Thái Nguyên
+                </p>
+                <p>
+                    <i class="material-icons">call</i> Hotline: 0208 730 0068
+                </p>
+                <p>
+                    <i class="material-icons">mail</i> Email: contact@sangdiego.vn
+                </p>
+                <p>
+                    <i class="material-icons">schedule</i> Giờ mở cửa: 08:00 - 22:30 hàng ngày
+                </p>
             </div>
 
             <div class="footer-social">
                 <h3>Kết nối với chúng tôi</h3>
-                <a href="https://facebook.com" target="_blank">🌐 Facebook</a>
-                <a href="https://instagram.com" target="_blank">📸 Instagram</a>
-                <a href="https://tiktok.com" target="_blank">🎵 TikTok</a>
+                <a href="https://facebook.com" target="_blank">
+                    <i class="material-icons">link</i> Facebook
+                </a>
+                <a href="https://instagram.com" target="_blank">
+                    <i class="material-icons">link</i> Instagram
+                </a>
+                <a href="https://tiktok.com" target="_blank">
+                    <i class="material-icons">link</i> TikTok
+                </a>
             </div>
 
             <div class="footer-map">

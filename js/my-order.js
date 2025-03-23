@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             let nutTheoDoi = "";
             if (don.NguoiLap === username) {
-                nutTheoDoi = `<button class="theo-doi" data-id="${don.maDatMon}">Xem tiến trình</button>`;
+                nutTheoDoi = `<button class="theo-doi" data-id="${don.maDatMon}"><i class="material-icons">preview</i> Tiến trình</button>`;
             }
 
             const formatter = new Intl.DateTimeFormat("vi-VN", {
@@ -68,10 +68,10 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             donHangDiv.innerHTML = `
-                <h2>Đơn đặt món: #${don.maDatMon}</h2>
-                <p><strong>Thời gian đặt:</strong> ${formatter.format(new Date(don.ThoiGianDat))}</p>
-                <p><strong>Tổng tiền:</strong> ${don.TongTien.toLocaleString()} VNĐ</p>
-                <p class="trang-thai"><strong>Trạng thái:</strong> ${don.TrangThai}</p>
+                <h2>Đơn: #${don.maDatMon}</h2>
+                <p><strong><i class="material-icons">schedule</i>Thời gian đặt:</strong> ${formatter.format(new Date(don.ThoiGianDat))}</p>
+                <p><strong><i class="material-icons">savings</i>Tổng tiền:</strong> ${don.TongTien.toLocaleString()} VNĐ</p>
+                <p class="trang-thai"><strong><i class="material-icons">info</i>Trạng thái:</strong> ${don.TrangThai}</p>
                 ${nutTheoDoi}
             `;
             donHangContainer.appendChild(donHangDiv);
@@ -84,12 +84,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 hienThiTienTrinhGiao(maDatMon);
             });
         });
-    
+
         // Đóng modal
         document.querySelector(".close").addEventListener("click", function () {
             document.getElementById("tracking-modal").style.display = "none";
         });
-    
+
         window.addEventListener("click", function (event) {
             const modal = document.getElementById("tracking-modal");
             if (event.target === modal) {
@@ -102,22 +102,22 @@ document.addEventListener("DOMContentLoaded", function () {
     filterOnlineCheckbox.addEventListener("change", () => {
         taiDonHang(); // Gọi lại để cập nhật danh sách đơn hàng
     });
-    
+
     // Hàm hiển thị tiến trình giao hàng theo dạng timeline
     async function hienThiTienTrinhGiao(maDatMon) {
         const trackingTimeline = document.getElementById("tracking-timeline");
         const trackingMessage = document.getElementById("tracking-message");
         trackingTimeline.innerHTML = "<p>Đang tải...</p>";
         trackingMessage.innerHTML = "";
-    
+
         try {
             const donHangRef = ref(database, `DatMon/${maDatMon}`);
             const snapshot = await get(donHangRef);
-    
+
             if (snapshot.exists()) {
                 const don = snapshot.val();
                 const trangThai = don.TrangThai;
-    
+
                 // Danh sách trạng thái theo thứ tự
                 const trangThaiSteps = [
                     "Đang xử lý",
@@ -125,40 +125,47 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Đang giao",
                     "Hoàn tất"
                 ];
-    
+
+                // Danh sách icon tương ứng với trạng thái
+                const trangThaiIcons = {
+                    "Đang xử lý": "pending_actions", // ⏳
+                    "Đang chuẩn bị": "restaurant_menu", // 🍽️
+                    "Đang giao": "local_shipping", // 🚚
+                    "Hoàn tất": "check_circle" // ✅
+                };
+
                 // Thông điệp tương ứng với trạng thái
                 const trangThaiMessages = {
                     "Đang xử lý": "Đơn đặt món của bạn đã được tiếp nhận! Chúng tôi sẽ xác nhận và xử lý trong thời gian sớm nhất.",
                     "Đang chuẩn bị": "Bếp trưởng và đội ngũ đầu bếp đang tất bật chế biến món ăn cho bạn. Hãy kiên nhẫn chờ đợi một chút nhé!",
                     "Đang giao": "Tài xế đang trên đường giao đơn đặt của bạn. Hãy đảm bảo điện thoại của bạn sẵn sàng để nhận hàng và chuẩn bị sẵn số tiền thanh toán nhé!",
                     "Hoàn tất": "Đơn đặt món đã được giao thành công! Cảm ơn bạn đã ủng hộ. Chúc bạn có một bữa ăn ngon miệng!"
-                };                
-    
+                };
+
                 // Xác định trạng thái hiện tại
                 const trangThaiIndex = trangThaiSteps.indexOf(trangThai);
-                const progressWidth = trangThai==="Hoàn tất"? 80 : (trangThaiIndex / (trangThaiSteps.length - 1)) * 100;
-    
-                // Render giao diện tiến trình
+                const progressWidth = trangThai === "Hoàn tất" ? 80 : (trangThaiIndex / (trangThaiSteps.length - 1)) * 100;
+
+                // Render giao diện tiến trình với icon
                 trackingTimeline.innerHTML = `
-                    <div class="tracking-timeline">
-                        <div class="progress-bar" style="width: ${progressWidth}%;"></div>
-                        ${trangThaiSteps
-                            .map(
-                                (step, index) =>
-                                    `<div>
-                                        <div class="tracking-step ${index <= trangThaiIndex ? "active" : ""}">
-                                            ${index + 1}
-                                        </div>
-                                        <div class="tracking-label">${step}</div>
-                                    </div>`
-                            )
-                            .join("")}
-                    </div>
+                <div class="tracking-timeline">
+                    <div class="progress-bar" style="width: ${progressWidth}%;"></div>
+                    ${trangThaiSteps
+                        .map(
+                            (step, index) =>
+                                `<div>
+                                    <div class="tracking-step ${index <= trangThaiIndex ? "active" : ""}">
+                                        <i class="material-icons">${trangThaiIcons[step]}</i>
+                                    </div>
+                                    <div class="tracking-label">${step}</div>
+                                </div>`
+                        )
+                        .join("")}
+                </div>
                 `;
-    
                 // Hiển thị thông điệp phù hợp
                 trackingMessage.innerHTML = trangThaiMessages[trangThai] || "Trạng thái không xác định.";
-    
+
             } else {
                 trackingTimeline.innerHTML = "<p>Không tìm thấy thông tin đơn hàng.</p>";
             }
@@ -166,15 +173,15 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Lỗi tải tiến trình giao hàng:", error);
             trackingTimeline.innerHTML = "<p>Lỗi tải dữ liệu.</p>";
         }
-    
+
         // Hiển thị modal
         document.getElementById("tracking-modal").style.display = "flex";
     }
 
     document.getElementById("btn-dat-mon").addEventListener("click", function () {
         window.location.href = "index.html";
-    });    
-     
+    });
+
 
     taiDonHang();
 });
