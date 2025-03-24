@@ -44,5 +44,5 @@ button:hover {
 }
 
 i{
-    vertical-align: middle;
+    vertical-align: middle !important;
 }

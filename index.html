@@ -15,6 +15,35 @@
 
     <header>
         <h3>🍽️ Đặt món - Online</h3>
+        <nav>
+            <ul class="menu">
+                <li data-mau="#fffff5" class="bo-loc">
+                    <i class="material-icons">search</i>
+                    <div class="tieu-de">
+                        <input type="text" id="tim-kiem" placeholder="Tìm kiếm món ăn...">
+                    </div>
+                </li>
+                <li data-mau="#fffff5" id="gio-hang-container">
+                    <i class="material-icons">shopping_cart</i>
+                    <span id="so-luong-gio-hang">0</span>
+                    <div class="tieu-de" id="btn-gio-hang">Xem chi tiết
+                        <i class="material-icons">visibility</i>
+                    </div>
+                </li>
+                <li data-mau="#fffff5" id="lich-su-container" style="display: none;">
+                    <i class="material-icons">history</i>
+                    <div class="tieu-de" id="btn-lich-su">Lịch sử đặt
+                        <i class="material-icons">arrow_forward</i>
+                    </div>
+                </li>
+                <li data-mau="#fffff5" id="user-info">
+                    <i class="material-icons">account_circle</i>
+                    <div class="tieu-de" id="btn-user" onclick="handleUserClick()">Đăng nhập</div>
+                </li>
+            </ul>
+        </nav>
+
+        <!--
         <div class="header-buttons">
             <div class="bo-loc">
                 <input type="text" id="tim-kiem" placeholder="Tìm kiếm món ăn...">
@@ -37,7 +66,9 @@
                 </button>
             </div>
         </div>
+        -->
     </header>
+
 
     <main>
         <div class="bo-loc">
@@ -72,55 +103,55 @@
 
                 <div class="input-group">
                     <label>
-                        <i class="material-icons">person</i>Họ và tên:
+                        <i class="material-icons">person</i>
                     </label>
                     <input type="text" id="ho-ten">
                 </div>
                 <div class="input-group">
                     <label>
-                        <i class="material-icons">calendar_today</i>Ngày sinh:
+                        <i class="material-icons">calendar_today</i>
                     </label>
                     <input type="date" id="ngay-sinh">
                 </div>
 
                 <div class="input-group">
                     <label>
-                        <i class="material-icons">location_on</i>Địa chỉ:
+                        <i class="material-icons">location_on</i>
                     </label>
                     <input type="text" id="dia-chi">
                 </div>
                 <div class="input-group">
                     <label>
-                        <i class="material-icons">favorite</i>Món yêu thích:
+                        <i class="material-icons">favorite</i>
                     </label>
                     <input type="text" id="mon-yeu-thich">
                 </div>
 
                 <div class="input-group">
                     <label>
-                        <i class="material-icons">workspace_premium</i>Hạng thành viên:
+                        <i class="material-icons">workspace_premium</i>
                     </label>
                     <input type="text" id="hang-thanh-vien" disabled>
                 </div>
                 <div class="input-group">
                     <label>
-                        <i class="material-icons">star</i>Điểm tích lũy:
+                        <i class="material-icons">star</i>
                     </label>
                     <input type="number" id="diem-tich-luy" disabled>
                 </div>
 
                 <div class="input-group">
                     <label>
-                        <i class="material-icons">payments</i>Tổng chi tiêu:
+                        <i class="material-icons">payments</i>
                     </label>
                     <input type="text" id="tong-chi-tieu" disabled>
                 </div>
 
                 <button id="btn-cap-nhat">
-                    <i class="material-icons">update</i> Cập Nhật
+                    <i class="material-icons">update</i> Cập nhật
                 </button>
                 <button id="btn-logout">
-                    <i class="material-icons">logout</i> Đăng Xuất
+                    <i class="material-icons">logout</i> Đăng xuất
                 </button>
             </div>
         </div>
@@ -171,6 +202,10 @@
             <p>&copy; 2024 Sang Diego Pizza & Grill - Thái Nguyên. All rights reserved.</p>
         </div>
     </footer>
+
+    <div id="btn-len-dau-trang">
+        <i class="material-icons">arrow_upward</i> Lên đầu trang
+    </div>    
 
     <script type="module" src="js/firebase-config.js"></script>
     <script type="module" src="js/order.js"></script>

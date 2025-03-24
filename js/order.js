@@ -37,9 +37,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     localStorage.removeItem("username");
                     return;
                 }
-
-                btnUser.innerHTML = `<i class="material-icons">face</i> ${username}`;
-                lichSuContainer.style.display = "inline-block";
+                document.querySelector("#user-info i").textContent = "face";
+                btnUser.innerHTML = `${username}`;
+                //lichSuContainer.style.display = "inline-block";
 
             } else {
                 alert("Tài khoản không tồn tại! Tự động đăng xuất.");
@@ -335,3 +335,50 @@ window.handleUserClick = function () {
         window.location.href = "auth.html";
     }
 };
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const items = document.querySelectorAll(".menu li");
+
+    function canhChinh(selectedItem) {
+        // Xóa class active khỏi tất cả các item
+        items.forEach(item => item.classList.remove("active"));
+
+        // Thêm class active cho item được chọn
+        selectedItem.classList.add("active");
+
+        // Lấy div.tieu-de tương ứng với item được chọn
+        const title = selectedItem.querySelector(".tieu-de");
+
+        // Cập nhật màu nền cho tiêu đề từ data-mau
+        title.style.backgroundColor = selectedItem.getAttribute("data-mau");
+    }
+    
+    // Mặc định chọn item đầu tiên
+    if (items.length > 0) {
+        canhChinh(items[0]);
+    }
+
+    // Thêm sự kiện click cho từng item
+    items.forEach(item => {
+        item.addEventListener("click", function () {
+            canhChinh(this);
+        });
+    });
+});
+
+
+window.onscroll = function () {
+    let nut = document.getElementById("btn-len-dau-trang");
+
+    // Hiển thị khi cuộn xuống hơn 200px
+    if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        nut.style.display = "block";
+    } else {
+        nut.style.display = "none";
+    }
+};
+
+document.getElementById("btn-len-dau-trang").addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
