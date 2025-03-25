@@ -1,5 +1,4 @@
-import { database } from "./firebase-config.js";
-import { ref, get, set, update } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+import { layNguoiDung, layDanhSachDanhMuc, layDanhSachMonAn, layKhachHang, suaKhachHang, themDatMon } from "./CONTROLLER.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const danhSachMonAn = document.getElementById("danh-sach-mon-an");
@@ -21,25 +20,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const username = localStorage.getItem("username");
 
+
     async function kiemTraDangNhap() {
         if (!username) {
             return;
         }
 
         try {
-            const snapshot = await get(ref(database, `Users/${username}`));
-            if (snapshot.exists()) {
-                const userData = snapshot.val();
-                const role = userData.VaiTro || "Khách hàng"; // Mặc định nếu không có role
+            const userData = await layNguoiDung(username); // Gọi từ CONTROLLER.js
+
+            if (userData) {
+                const role = userData.VaiTro || "Khách hàng"; // Mặc định nếu không có VaiTro
 
                 if (role !== "Khách hàng") {
                     alert("Bạn không có quyền truy cập! Vui lòng đăng nhập với tài khoản khách hàng.");
                     localStorage.removeItem("username");
                     return;
                 }
+
                 document.querySelector("#user-info i").textContent = "face";
                 btnUser.innerHTML = `${username}`;
-                //lichSuContainer.style.display = "inline-block";
 
             } else {
                 alert("Tài khoản không tồn tại! Tự động đăng xuất.");
@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Lỗi khi lấy thông tin người dùng:", error);
         }
     }
-
     kiemTraDangNhap();
 
     // Local Storage - Giỏ hàng
@@ -125,43 +124,43 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Đặt món
     btnXacNhanDatMon.addEventListener("click", async () => {
         const maDatMon = maDatMonInput.value.trim();
         if (!maDatMon) {
             alert("Vui lòng nhập đầy đủ thông tin!");
             return;
         }
+    
         try {
-            const userRef = ref(database, `KhachHang/${username}`);
-            const userSnapshot = await get(userRef);
-
-            if (!userSnapshot.exists()) {
+            // 🔹 Lấy thông tin khách hàng từ database
+            const khachHang = await layKhachHang(username);
+            if (!khachHang) {
                 alert("Không tìm thấy thông tin khách hàng!");
                 return;
             }
-
-            const userData = userSnapshot.val();
-            const address = userData.DiaChi?.trim();
-
-            if (!address) {
+    
+            if (!khachHang.DiaChi?.trim()) {
                 alert("Bạn cần thêm địa chỉ để chúng tôi có thể giao đơn đặt!");
                 return;
             }
-
-            const thoiGianDat = new Date().toISOString();
-            const tongTien = Object.entries(gioHang).reduce((sum, [_, soLuong]) => sum + (soLuong * 50000), 0);
-
-            // 🔹 Tiến hành đặt món
-            await set(ref(database, `DatMon/${maDatMon}`), {
+    
+            // 🔹 Tính tổng tiền
+            const tongTien = Object.entries(gioHang).reduce((sum, [_, soLuong]) => sum + soLuong * 50000, 0);
+    
+            // 🔹 Tạo đơn đặt món
+            const donDatMon = {
+                MaDat: maDatMon,
                 MaKhach: username,
                 NguoiDat: username,
-                ThoiGianDat: thoiGianDat,
+                ThoiGianDat: new Date().toISOString(),
                 DanhSachMon: { ...gioHang },
                 TongTien: tongTien,
                 TrangThai: "Đang xử lý",
-            });
-
+            };
+    
+            // 🔹 Thêm đơn đặt món vào database
+            await themDatMon(donDatMon);
+    
             alert("Đặt món thành công!");
             gioHang = {};
             luuGioHang();
@@ -171,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Lỗi đặt món:", error);
             alert("Lỗi khi đặt món, vui lòng thử lại.");
         }
-    });
+    });    
 
     btnHuyDatMon.addEventListener("click", () => formDatMon.classList.add("hidden"));
 
@@ -180,63 +179,73 @@ document.addEventListener("DOMContentLoaded", function () {
         maDatMonInput.disabled = tuTaoMaCheckbox.checked;
     });
 
-    // Lấy danh mục và món ăn từ Firebase
-    async function layDanhSachDanhMuc() {
-        try {
-            const snapshot = await get(ref(database, "Menu"));
-            if (snapshot.exists()) {
-                chonDanhMuc.innerHTML += Object.keys(snapshot.val()).map(danhMuc => `<option value="${danhMuc}">${danhMuc}</option>`).join("");
-            }
-        } catch (error) {
-            console.error("Lỗi khi lấy danh mục:", error);
-        }
+    async function layDanhSachDanhMucUI() {
+        let danhMucList = await layDanhSachDanhMuc();
+        chonDanhMuc.innerHTML = ""; // Xóa option cũ
+        chonDanhMuc.appendChild(new Option("Tất cả", "tat-ca")); // Thêm option mặc định
+        chonDanhMuc.innerHTML = `<option value="tat-ca">Tất cả</option>` +
+            danhMucList.map(danhMuc => `<option value="${danhMuc}">${danhMuc}</option>`).join("");
     }
-    async function layDanhSachMonAn(danhMucDaChon = "tat-ca", tuKhoaTimKiem = "") {
+
+    async function layDanhSachMonAnUI(danhMucDaChon = "tat-ca", tuKhoaTimKiem = "") {
         danhSachMonAn.innerHTML = "";
         try {
-            const snapshot = await get(ref(database, "Menu"));
-            if (!snapshot.exists()) return;
-            const fragment = document.createDocumentFragment();
-            const tuKhoa = tuKhoaTimKiem.toLowerCase();
-            Object.entries(snapshot.val()).forEach(([danhMuc, monAnList]) => {
-                if (danhMucDaChon !== "tat-ca" && danhMucDaChon !== danhMuc) return;
-                Object.entries(monAnList).forEach(([maMon, monAn]) => {
-                    if ([danhMuc, monAn.TenMon, monAn.MoTa, monAn.Gia.toString()].some(field => field.toLowerCase().includes(tuKhoa))) {
-                        const monAnDiv = document.createElement("div");
-                        monAnDiv.classList.add("mon-an");
-                        monAnDiv.classList.add("shine");
-                        monAnDiv.innerHTML = `
-                        <img src="${monAn.HinhAnh}" alt="${monAn.TenMon}">
-                        <h3>${monAn.TenMon}</h3>
-                        <p>${monAn.MoTa}</p>
-                        <p>${monAn.Gia.toLocaleString('vi-VN')} VND</p>
-                        <button class="them-vao-gio" data-mamon="${maMon}"><i class="material-icons">add_shopping_cart</i> Thêm vào giỏ hàng</button>
-                        <div class="hover-mon">
-                            <button class="tim-kiem-tuong-tu"><i class="material-icons">search</i> tương tự</button>
-                            <button class="them-1-vao-gio"><i class="material-icons">add_shopping_cart</i> +1</button>
-                        </div>`;
+            // Nếu chọn "tat-ca", ta lấy danh sách của tất cả danh mục
+            let danhSachMon = danhMucDaChon === "tat-ca"
+                ? (await Promise.all((await layDanhSachDanhMuc()).map(layDanhSachMonAn))).flat()
+                : await layDanhSachMonAn(danhMucDaChon);
 
-                        monAnDiv.querySelector(".tim-kiem-tuong-tu").addEventListener("click", () => {
-                            chonDanhMuc.value = "tat-ca"
-                            timKiem.value = danhMuc;
-                            layDanhSachMonAn(chonDanhMuc.value, timKiem.value);
-                        });
-                        monAnDiv.querySelector(".them-1-vao-gio").addEventListener("click", function () {
-                            themVaoGioHang(maMon, this);
-                        });                        
-                        fragment.appendChild(monAnDiv);
-                    }
+            // Lọc theo từ khóa tìm kiếm
+            const tuKhoa = tuKhoaTimKiem?.toLowerCase() || "";
+            danhSachMon = danhSachMon.filter(mon =>
+                [mon.DanhMuc, mon.TenMon, mon.MoTa, mon.Gia?.toString()]
+                    .some(field => field?.toLowerCase().includes(tuKhoa))
+            );
+
+            const fragment = document.createDocumentFragment();
+            danhSachMon.forEach(({ DanhMuc, MaMon, TenMon, MoTa, Gia, HinhAnh }) => {
+                const monAnDiv = document.createElement("div");
+                monAnDiv.classList.add("mon-an", "shine");
+                monAnDiv.innerHTML = `
+                <img src="${HinhAnh}" alt="${TenMon}">
+                <h3>${TenMon}</h3>
+                <p>${MoTa}</p>
+                <p>${Gia.toLocaleString('vi-VN')} VND</p>
+                <button class="them-vao-gio" data-mamon="${MaMon}">
+                    <i class="material-icons">add_shopping_cart</i> Thêm vào giỏ hàng
+                </button>
+                <div class="hover-mon">
+                    <button class="tim-kiem-tuong-tu">
+                        <i class="material-icons">search</i> tương tự
+                    </button>
+                    <button class="them-1-vao-gio">
+                        <i class="material-icons">add_shopping_cart</i> +1
+                    </button>
+                </div>`;
+
+                monAnDiv.querySelector(".tim-kiem-tuong-tu").addEventListener("click", () => {
+                    chonDanhMuc.value = "tat-ca";
+                    timKiem.value = DanhMuc;
+                    layDanhSachMonAnUI(chonDanhMuc.value, timKiem.value);
                 });
+
+                monAnDiv.querySelector(".them-1-vao-gio").addEventListener("click", function () {
+                    themVaoGioHang(MaMon, this);
+                });
+
+                fragment.appendChild(monAnDiv);
             });
+
             danhSachMonAn.appendChild(fragment);
         } catch (error) {
             console.error("Lỗi khi lấy danh sách món ăn:", error);
         }
     }
 
+
     // Sự kiện
-    chonDanhMuc.addEventListener("change", () => layDanhSachMonAn(chonDanhMuc.value, timKiem.value));
-    timKiem.addEventListener("input", () => layDanhSachMonAn(chonDanhMuc.value, timKiem.value));
+    chonDanhMuc.addEventListener("change", () => layDanhSachMonAnUI(chonDanhMuc.value, timKiem.value));
+    timKiem.addEventListener("input", () => layDanhSachMonAnUI(chonDanhMuc.value, timKiem.value));
     danhSachMonAn.addEventListener("click", (e) => {
         if (e.target.classList.contains("them-vao-gio")) themVaoGioHang(e.target.dataset.mamon, e.target);
     });
@@ -253,40 +262,38 @@ document.addEventListener("DOMContentLoaded", function () {
     const userModal = document.getElementById("user-modal");
     const closeModal = document.querySelector(".close");
 
-    document.getElementById("btn-user").addEventListener("click", function () {
+    document.getElementById("btn-user").addEventListener("click", async function () {
         const username = localStorage.getItem("username");
         if (!username) {
-            window.location.href = "auth.html"; // Chuyển đến trang đăng nhập nếu chưa đăng nhập
-        } else {
+            window.location.href = "auth.html";
+            return;
+        }
+
+        try {
+            const khachHang = await layKhachHang(username);
+            if (!khachHang) {
+                alert("Không tìm thấy thông tin khách hàng!");
+                return;
+            }
+
             // Hiển thị modal thông tin tài khoản
             userModal.style.display = "flex";
             userModal.classList.add("show");
 
-            const userRef = ref(database, `KhachHang/${username}`);
-
-            get(userRef)
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        const userData = snapshot.val();
-
-                        // Đổ dữ liệu vào form
-                        document.getElementById("ho-ten").value = userData.HoTen || "";
-                        document.getElementById("ngay-sinh").value = userData.NgaySinh.split("T")[0] || "";
-                        document.getElementById("dia-chi").value = userData.DiaChi || "";
-                        document.getElementById("mon-yeu-thich").value = userData.MonYeuThich || "";
-                        document.getElementById("hang-thanh-vien").value = userData.HangThanhVien || "";
-                        document.getElementById("diem-tich-luy").value = userData.DiemTichLuy || 0;
-                        document.getElementById("tong-chi-tieu").value = userData.TongChiTieu || 0;
-                    } else {
-                        alert("Không tìm thấy thông tin khách hàng!");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Lỗi khi lấy dữ liệu khách hàng:", error);
-                    alert("Lỗi khi tải thông tin, vui lòng thử lại.");
-                });
+            // Đổ dữ liệu vào form
+            document.getElementById("ho-ten").value = khachHang.HoTen || "";
+            document.getElementById("ngay-sinh").value = khachHang.NgaySinh.split("T")[0] || "";
+            document.getElementById("dia-chi").value = khachHang.DiaChi || "";
+            document.getElementById("mon-yeu-thich").value = khachHang.MonYeuThich || "";
+            document.getElementById("hang-thanh-vien").value = khachHang.HangThanhVien || "";
+            document.getElementById("diem-tich-luy").value = khachHang.DiemTichLuy || 0;
+            document.getElementById("tong-chi-tieu").value = khachHang.TongChiTieu || 0;
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu khách hàng:", error);
+            alert("Lỗi khi tải thông tin, vui lòng thử lại.");
         }
     });
+
 
     // Xử lý đóng modal
     closeModal.addEventListener("click", function () {
@@ -295,32 +302,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-    // Cập nhật thông tin
-    document.getElementById("btn-cap-nhat").addEventListener("click", function () {
-        if (!username) {
-            alert("Bạn cần đăng nhập để cập nhật thông tin!");
-            return;
-        }
-
-        const updatedData = {
+    document.getElementById("btn-cap-nhat").addEventListener("click", async function () {
+        const khachHang = {
+            SDT: username,
             HoTen: document.getElementById("ho-ten").value,
             NgaySinh: document.getElementById("ngay-sinh").value + "T00:00:00",
             DiaChi: document.getElementById("dia-chi").value,
             MonYeuThich: document.getElementById("mon-yeu-thich").value,
+            HangThanhVien: document.getElementById("hang-thanh-vien").value,
+            DiemTichLuy: parseInt(document.getElementById("diem-tich-luy").value) || 0,
+            TongChiTieu: parseFloat(document.getElementById("tong-chi-tieu").value) || 0
         };
-
-        const userRef = ref(database, `KhachHang/${username}`);
-
-        update(userRef, updatedData)
-            .then(() => {
-                alert("Cập nhật thông tin thành công!");
-                console.log("Thông tin đã cập nhật:", updatedData);
-            })
-            .catch((error) => {
-                console.error("Lỗi khi cập nhật thông tin:", error);
-                alert("Lỗi khi cập nhật, vui lòng thử lại.");
-            });
-    });
+    
+        try {
+            await suaKhachHang(khachHang);
+            alert("Cập nhật thông tin thành công!");
+        } catch (error) {
+            alert("Lỗi khi cập nhật, vui lòng thử lại.");
+        }
+    });    
 
     // Xử lý đăng xuất
     document.getElementById("btn-logout").addEventListener("click", function () {
@@ -333,8 +333,8 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "my-order.html";
     });
 
-    layDanhSachDanhMuc();
-    layDanhSachMonAn();
+    layDanhSachDanhMucUI();
+    layDanhSachMonAnUI();
     capNhatSoLuongGioHang();
 });
 
