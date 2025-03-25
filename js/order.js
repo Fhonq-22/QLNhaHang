@@ -204,6 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if ([danhMuc, monAn.TenMon, monAn.MoTa, monAn.Gia.toString()].some(field => field.toLowerCase().includes(tuKhoa))) {
                         const monAnDiv = document.createElement("div");
                         monAnDiv.classList.add("mon-an");
+                        monAnDiv.classList.add("shine");
                         monAnDiv.innerHTML = `
                         <img src="${monAn.HinhAnh}" alt="${monAn.TenMon}">
                         <h3>${monAn.TenMon}</h3>

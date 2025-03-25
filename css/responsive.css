@@ -125,6 +125,19 @@
         font-size: 12px;
         padding: 8px;
     }
+    .menu li:before {
+        width: 36px;
+        height: 36px;
+    }
+    .menu li.active:before {
+        left: -9px;
+    }
+    .menu li.active .tieu-de {
+        transform: translateX(-4%);
+    }
+    .menu li.active .tieu-de {
+        padding: 4px;
+    }
 
     .modal-content {
         width: 95%;
