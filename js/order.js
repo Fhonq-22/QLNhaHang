@@ -63,19 +63,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Giỏ hàng
-    function themVaoGioHang(maMon) {
-        let btnDatMon = document.querySelector(`.them-vao-gio[data-mamon="${maMon}"]`);
+    function themVaoGioHang(maMon, btnBatDau) {
         let gioHangIcon = document.querySelector("#btn-gio-hang");
 
-        if (!btnDatMon || !gioHangIcon) {
+        if (!btnBatDau || !gioHangIcon) {
             console.error("LỖI: Không tìm thấy phần tử!");
             return;
         }
 
-
-
-        // Lấy vị trí bắt đầu và kết thúc
-        let rectStart = btnDatMon.getBoundingClientRect();
+        let rectStart = btnBatDau.getBoundingClientRect();
         let rectEnd = gioHangIcon.getBoundingClientRect();
 
         // Tạo icon bay
@@ -213,14 +209,20 @@ document.addEventListener("DOMContentLoaded", function () {
                         <h3>${monAn.TenMon}</h3>
                         <p>${monAn.MoTa}</p>
                         <p>${monAn.Gia.toLocaleString('vi-VN')} VND</p>
-                        <button class="tim-kiem-tuong-tu"><i class="material-icons">search</i></button>
-                        <button class="them-vao-gio" data-mamon="${maMon}"><i class="material-icons">add_shopping_cart</i> Thêm vào giỏ hàng</button>`;
+                        <button class="them-vao-gio" data-mamon="${maMon}"><i class="material-icons">add_shopping_cart</i> Thêm vào giỏ hàng</button>
+                        <div class="hover-mon">
+                            <button class="tim-kiem-tuong-tu"><i class="material-icons">search</i> tương tự</button>
+                            <button class="them-1-vao-gio"><i class="material-icons">add_shopping_cart</i> +1</button>
+                        </div>`;
 
                         monAnDiv.querySelector(".tim-kiem-tuong-tu").addEventListener("click", () => {
                             chonDanhMuc.value = "tat-ca"
                             timKiem.value = danhMuc;
                             layDanhSachMonAn(chonDanhMuc.value, timKiem.value);
                         });
+                        monAnDiv.querySelector(".them-1-vao-gio").addEventListener("click", function () {
+                            themVaoGioHang(maMon, this);
+                        });                        
                         fragment.appendChild(monAnDiv);
                     }
                 });
@@ -235,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
     chonDanhMuc.addEventListener("change", () => layDanhSachMonAn(chonDanhMuc.value, timKiem.value));
     timKiem.addEventListener("input", () => layDanhSachMonAn(chonDanhMuc.value, timKiem.value));
     danhSachMonAn.addEventListener("click", (e) => {
-        if (e.target.classList.contains("them-vao-gio")) themVaoGioHang(e.target.dataset.mamon);
+        if (e.target.classList.contains("them-vao-gio")) themVaoGioHang(e.target.dataset.mamon, e.target);
     });
     btnGioHang.addEventListener("click", () => {
         hienThiGioHang();

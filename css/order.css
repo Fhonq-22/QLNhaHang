@@ -6,7 +6,7 @@ header {
     color: white;
     text-align: center;
     padding: 20px 0;
-    font-size: 24px;
+    /* font-size: 24px; */
     font-weight: bold;
     box-shadow: var(--do-bong);
     position: fixed;
@@ -17,6 +17,7 @@ header {
     height: 150px;
     display: flex;
     flex-direction: column;
+    width: 100vw;
 }
 
 .header-buttons {
@@ -32,17 +33,6 @@ header {
     position: relative;
     display: inline-block;
 }
-
-/* #btn-gio-hang {
-    background-color: var(--mau-diem-nhan);
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: var(--bo-goc);
-    transition: 0.3s;
-} */
 
 #btn-gio-hang:hover {
     background-color: var(--mau-nut);
@@ -88,17 +78,16 @@ main {
 
 /* === MÓN ĂN === */
 .mon-an {
+    position: relative;
     background: white;
     padding: 15px;
     border-radius: var(--bo-goc);
     box-shadow: var(--do-bong);
     text-align: center;
     transition: transform 0.3s ease-in-out;
+    overflow: hidden;
 }
 
-.mon-an:hover {
-    transform: scale(1.05);
-}
 
 /* === HÌNH ẢNH MÓN ĂN === */
 .mon-an img {
@@ -516,27 +505,6 @@ nav {
     transition: all 0.4s ease-in-out;
 }
 
-/* .menu li:nth-child(1):before {
-    background: #537895;
-}
-
-.menu li:nth-child(2):before {
-    background: #ff6b81;
-}
-
-.menu li:nth-child(3):before {
-    background: #7bed9f;
-}
-
-.menu li:nth-child(4):before {
-    background: #70a1ff;
-}
-
-.menu li:nth-child(5):before {
-    background: #dfe4ea;
-} */
-
-
 
 
 .menu li .tieu-de {
@@ -604,27 +572,38 @@ span#so-luong-gio-hang {
 
 
 
-.mon-an button.tim-kiem-tuong-tu {
+.mon-an .hover-mon{
     position: absolute;
-    top: 5%;
-    right: 5%;
+    top: 8%;
+    right: 8%;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.mon-an:hover .hover-mon{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    opacity: 1;
+    visibility: visible;
+}
+
+.mon-an .hover-mon button.tim-kiem-tuong-tu,
+.mon-an .hover-mon button.them-1-vao-gio{
     background: rgba(0, 0, 0, 0.7);
     color: white;
     border: none;
-    padding: 10px;
-    border-radius: 50%;
+    padding: 5px 10px;
+    border-radius: 50px;
     cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    overflow: hidden;
     transform: translate(100%, 0%);
     transition: all 0.6s ease;
 }
 
-.mon-an:hover button.tim-kiem-tuong-tu {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(0%, 0%);
+.mon-an .hover-mon button.them-1-vao-gio{
+    transition: all 0.8s ease;
 }
 
-
+.mon-an:hover .hover-mon button {
+    transform: translate(0%, 0%);
+}
