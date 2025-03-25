@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Kiểm tra checkbox lọc đơn online
         const isFilterOnline = filterOnlineCheckbox.checked;
         const donHangFiltered = isFilterOnline
-            ? donHangs.filter(don => don.MaKhach === username && don.NguoiLap === username) // Lọc đơn đặt online
+            ? donHangs.filter(don => don.MaKhach === username && don.NguoiDat === username) // Lọc đơn đặt online
             : donHangs;
 
         if (donHangFiltered.length === 0) {
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
             donHangDiv.classList.add("don-hang");
 
             let nutTheoDoi = "";
-            if (don.NguoiLap === username) {
+            if (don.NguoiDat === username) {
                 nutTheoDoi = `<button class="theo-doi" data-id="${don.maDatMon}"><i class="material-icons">preview</i> Tiến trình</button>`;
             }
 

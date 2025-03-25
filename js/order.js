@@ -159,11 +159,10 @@ document.addEventListener("DOMContentLoaded", function () {
             // 🔹 Tiến hành đặt món
             await set(ref(database, `DatMon/${maDatMon}`), {
                 MaKhach: username,
-                NguoiLap: username,
+                NguoiDat: username,
                 ThoiGianDat: thoiGianDat,
                 DanhSachMon: { ...gioHang },
                 TongTien: tongTien,
-                DiaChi: address, // Lưu địa chỉ lấy từ Firebase
                 TrangThai: "Đang xử lý",
             });
 
