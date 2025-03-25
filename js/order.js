@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
             Object.entries(snapshot.val()).forEach(([danhMuc, monAnList]) => {
                 if (danhMucDaChon !== "tat-ca" && danhMucDaChon !== danhMuc) return;
                 Object.entries(monAnList).forEach(([maMon, monAn]) => {
-                    if ([monAn.TenMon, monAn.MoTa, monAn.Gia.toString()].some(field => field.toLowerCase().includes(tuKhoa))) {
+                    if ([danhMuc, monAn.TenMon, monAn.MoTa, monAn.Gia.toString()].some(field => field.toLowerCase().includes(tuKhoa))) {
                         const monAnDiv = document.createElement("div");
                         monAnDiv.classList.add("mon-an");
                         monAnDiv.innerHTML = `
@@ -213,7 +213,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         <h3>${monAn.TenMon}</h3>
                         <p>${monAn.MoTa}</p>
                         <p>${monAn.Gia.toLocaleString('vi-VN')} VND</p>
+                        <button class="tim-kiem-tuong-tu"><i class="material-icons">search</i></button>
                         <button class="them-vao-gio" data-mamon="${maMon}"><i class="material-icons">add_shopping_cart</i> Thêm vào giỏ hàng</button>`;
+
+                        monAnDiv.querySelector(".tim-kiem-tuong-tu").addEventListener("click", () => {
+                            chonDanhMuc.value = "tat-ca"
+                            timKiem.value = danhMuc;
+                            layDanhSachMonAn(chonDanhMuc.value, timKiem.value);
+                        });
                         fragment.appendChild(monAnDiv);
                     }
                 });
@@ -352,7 +359,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Cập nhật màu nền cho tiêu đề từ data-mau
         title.style.backgroundColor = selectedItem.getAttribute("data-mau");
     }
-    
+
     // Mặc định chọn item đầu tiên
     if (items.length > 0) {
         canhChinh(items[0]);

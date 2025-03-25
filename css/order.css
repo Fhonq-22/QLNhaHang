@@ -601,3 +601,30 @@ span#so-luong-gio-hang {
     border-color: var(--mau-chu);
     background-color: var(--mau-chu-dao);
 }
+
+
+
+.mon-an button.tim-kiem-tuong-tu {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+    transform: translate(100%, 0%);
+    transition: all 0.6s ease;
+}
+
+.mon-an:hover button.tim-kiem-tuong-tu {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0%, 0%);
+}
+
+
