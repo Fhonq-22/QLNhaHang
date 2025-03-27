@@ -3,18 +3,15 @@ import { User, Menu, KhachHang, DatMon } from "./MODEL.js";
 
 // #region XỬ LÝ USER
 /**
- * Thêm người dùng
- * @param {string} username
- * @param {string} password
- * @param {string} role
+ * Thêm tài khoản người dùng vào database
+ * @param {User} user - Đối tượng người dùng cần thêm
  */
-export async function themNguoiDung(username, password, role) {
-    const user = new User(username, password, role);
-    await addData("Users", username, user.toJSON());
+export async function themNguoiDung(nguoiDung) {
+    await addData("Users", nguoiDung.TenNguoiDung, new User(...Object.values(nguoiDung)).toJSON());
 }
 
 /**
- * Lấy người dùng
+ * Lấy thông tin 1 người dùng
  * @param {string} username
  * @returns {User|null}
  */
@@ -22,6 +19,15 @@ export async function layNguoiDung(username) {
     const data = await getData("Users", username);
     return data ? new User(username, data.MatKhau, data.VaiTro) : null; 
     // Sửa lại đúng tên trường theo User.toJSON()
+}
+
+/**
+ * Lấy toàn bộ người dùng
+ * @returns {Array<User>} - Danh sách người dùng
+ */
+export async function layDanhSachNguoiDung() {
+    const data = await getData("Users","");
+    return data ? Object.keys(data) : [];
 }
 
 /**
@@ -83,11 +89,6 @@ export async function layDanhSachMonAn(danhMuc) {
  * Lấy toàn bộ danh mục (BBQ, Burger & Sandwich,...)
  * @returns {Array<string>} - Danh sách tên danh mục
  */
-// export async function layDanhSachDanhMuc() {
-//     const data = await getData("Menu");
-//     return data ? Object.keys(data) : [];
-// }
-
 export async function layDanhSachDanhMuc() {
     const data = await getData("Menu","");
     return data ? Object.keys(data) : [];

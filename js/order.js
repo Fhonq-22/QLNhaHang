@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ThoiGianDat: new Date().toISOString(),
                 DanhSachMon: { ...gioHang },
                 TongTien: tongTien,
-                TrangThai: "Đang xử lý",
+                TrangThai: "Đang xử lý"
             };
     
             // 🔹 Thêm đơn đặt món vào database
@@ -190,6 +190,7 @@ document.addEventListener("DOMContentLoaded", function () {
     async function layDanhSachMonAnUI(danhMucDaChon = "tat-ca", tuKhoaTimKiem = "") {
         danhSachMonAn.innerHTML = "";
         try {
+            document.getElementById("btn-len-dau-trang").click();
             // Nếu chọn "tat-ca", ta lấy danh sách của tất cả danh mục
             let danhSachMon = danhMucDaChon === "tat-ca"
                 ? (await Promise.all((await layDanhSachDanhMuc()).map(layDanhSachMonAn))).flat()
