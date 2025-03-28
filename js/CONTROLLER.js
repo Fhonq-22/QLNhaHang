@@ -95,6 +95,20 @@ export async function layDanhSachDanhMuc() {
 }
 
 /**
+ * Tìm danh mục chứa món ăn bằng cách duyệt qua tất cả danh mục
+ * @param {string} maMon - Mã món cần tìm
+ * @returns {Promise<string|null>} - Tên danh mục hoặc null nếu không tìm thấy
+ */
+export async function timDanhMucTuMaMon(maMon) {
+    const danhSachDanhMuc = await layDanhSachDanhMuc();
+    for (const danhMuc of danhSachDanhMuc) {
+        const data = await getData(`Menu/${danhMuc}`,`${maMon}`);
+        if (data) return danhMuc;
+    }
+    return null;
+}
+
+/**
  * Cập nhật thông tin món ăn
  * @param {string} danhMuc - Tên danh mục
  * @param {string} maMon - Mã món ăn
@@ -144,5 +158,16 @@ export async function suaKhachHang(updatedKhachHang) {
  */
 export async function themDatMon(datMon) {
     await updateData("DatMon", datMon.MaDat, new DatMon(...Object.values(datMon)).toJSON());
+}
+
+/**
+ * Lấy toàn bộ đơn đặt món
+ * @returns {Array<DatMon>} - Danh sách đặt món
+ */
+export async function layDanhSachDatMon() {
+    const data = await getData("DatMon", "") || {};
+    return data
+        ? Object.entries(data).map(([MaDat, value]) => new DatMon(MaDat, value.MaKhach, value.NguoiDat, value.ThoiGianDat, value.DanhSachMon, value.TongTien, value.TrangThai))
+        : null;
 }
 // #endregion

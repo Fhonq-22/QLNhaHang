@@ -1,187 +1,247 @@
-import { database } from "./firebase-config.js";
-import { ref, get } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+import { layDanhSachDatMon, layDanhSachDanhMuc, layDanhSachMonAn } from "./CONTROLLER.js";
 
-document.addEventListener("DOMContentLoaded", function () {
-    const username = localStorage.getItem("username");
-    const donHangContainer = document.getElementById("don-hang-container");
-    const filterOnlineCheckbox = document.getElementById("filter-online"); // Checkbox lọc đơn online
+document.querySelector(".jsFilter").addEventListener("click", function () {
+    document.querySelector(".filter-menu").classList.toggle("active");
+});
 
-    async function taiDonHang() {
-        try {
-            const donHangRef = ref(database, "DatMon");
-            const snapshot = await get(donHangRef);
+document.querySelector(".grid").addEventListener("click", function () {
+    document.querySelector(".list").classList.remove("active");
+    document.querySelector(".grid").classList.add("active");
+    document.querySelector(".table-wrapper").classList.add("gridView");
+    document.querySelector(".table-wrapper").classList.remove("tableView");
+});
 
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                const danhSachDon = Object.keys(data)
-                    .map(key => ({
-                        maDatMon: key,
-                        ...data[key]
-                    }))
-                    .filter(don => don.MaKhach === username); // Chỉ lấy đơn của khách hiện tại
+document.querySelector(".list").addEventListener("click", function () {
+    document.querySelector(".list").classList.add("active");
+    document.querySelector(".grid").classList.remove("active");
+    document.querySelector(".table-wrapper").classList.remove("gridView");
+    document.querySelector(".table-wrapper").classList.add("tableView");
+});
 
-                if (danhSachDon.length > 0) {
-                    hienThiDonHang(danhSachDon);
-                } else {
-                    donHangContainer.innerHTML = "<p>Không có đơn nào được đặt.</p>";
-                }
-            } else {
-                donHangContainer.innerHTML = "<p>Không có đơn nào được đặt.</p>";
-            }
-        } catch (error) {
-            console.error("Lỗi tải đơn đặt món:", error);
-            donHangContainer.innerHTML = "<p>Lỗi khi tải đơn đặt món.</p>";
+var modeSwitch = document.querySelector('.mode-switch');
+modeSwitch.addEventListener('click', function () {
+    document.documentElement.classList.toggle('light');
+    modeSwitch.classList.toggle('active');
+});
+
+
+
+// Khai báo biến toàn cục
+const username = localStorage.getItem("username");
+let dsMonAn = {};
+let currentFilters = {
+    kieuDat: 'Tất cả',
+    trangThai: 'Tất cả'
+};
+
+// Cache DOM elements
+const filterMenu = document.querySelector('.filter-menu');
+const typeFilter = filterMenu.querySelector('select:nth-child(2)');
+const statusFilter = filterMenu.querySelector('select:nth-child(4)');
+const applyBtn = document.querySelector('.filter-button.apply');
+const resetBtn = document.querySelector('.filter-button.reset');
+const filterBtn = document.querySelector('.jsFilter');
+const tableWrapper = document.querySelector(".table-wrapper.tableView");
+
+// Hàm chính
+async function addOrder() {
+    if (!dsMonAn || Object.keys(dsMonAn).length === 0) return;
+
+    const filteredOrders = (await layDanhSachDatMon()).filter(datMon => {
+        if (datMon.MaKhach !== username) return false;
+
+        if (currentFilters.kieuDat !== 'Tất cả') {
+            const isOnline = datMon.NguoiDat === username;
+            if (currentFilters.kieuDat === 'Đặt online' && !isOnline) return false;
+            if (currentFilters.kieuDat === 'Đặt tại nhà hàng' && isOnline) return false;
         }
-    }
 
-    function hienThiDonHang(donHangs) {
-        donHangContainer.innerHTML = "";
+        if (currentFilters.trangThai !== 'Tất cả' &&
+            datMon.TrangThai !== currentFilters.trangThai) return false;
 
-        // Kiểm tra checkbox lọc đơn online
-        const isFilterOnline = filterOnlineCheckbox.checked;
-        const donHangFiltered = isFilterOnline
-            ? donHangs.filter(don => don.MaKhach === username && don.NguoiDat === username) // Lọc đơn đặt online
-            : donHangs;
+        return true;
+    });
 
-        if (donHangFiltered.length === 0) {
-            donHangContainer.innerHTML = "<p>Không có đơn nào phù hợp.</p>";
+    hienThiDonDatMon(filteredOrders);
+}
+
+// Hàm render
+function hienThiDonDatMon(orders) {
+    const existingRows = tableWrapper.querySelectorAll('.orders-row');
+    existingRows.forEach(row => row.remove());
+
+    orders.forEach(datmon => {
+        // Tìm món có số lượng lớn nhất
+        const [monIdMax] = Object.entries(datmon.DanhSachMon).reduce(
+            (max, [monId, soLuong]) => soLuong > max[1] ? [monId, soLuong] : max,
+            [null, 0]
+        );
+        if (!monIdMax) return;
+        const monChinh = Object.values(dsMonAn).find(danhMuc =>
+            danhMuc[monIdMax]
+        )?.[monIdMax];
+        if (!monChinh) {
+            console.warn('Không tìm thấy món', monIdMax);
             return;
         }
+        const soMonKhac = Object.keys(datmon.DanhSachMon).length - 1;
+        tableWrapper.insertAdjacentHTML('beforeend', `
+            <div class="orders-row">
+                <div class="header-cell image">
+                    <img src="${monChinh.HinhAnh}" alt="${monChinh.TenMon}">
+                    ${soMonKhac > 0 ? `<span>+${soMonKhac} món khác</span>` : ``}
+                </div>
+                <div class="header-cell order-type">
+                    <span class="cell-label">Kiểu đặt:</span>
+                    ${datmon.NguoiDat === username ? "Đặt online" : "Đặt tại nhà hàng"}
+                </div>
+                <div class="header-cell order-status">
+                    <span class="cell-label">Trạng thái:</span>
+                    <span class="status ${{
+                            'Đang xử lý': 'dang-xu-ly',
+                            'Đang chuẩn bị': 'dang-chuan-bi',
+                            'Đang giao': 'dang-giao',
+                            'Hoàn tất': 'hoan-tat',
+                            'Hủy': 'huy'
+                        }[datmon.TrangThai] || 'disabled'
+                        }">
+                        ${datmon.TrangThai}
+                    </span>
+                </div>
+                <div class="header-cell order-time">
+                    <span class="cell-label">Thời gian:</span>
+                    ${new Date(datmon.ThoiGianDat).toLocaleString('vi-VN')}
+                </div>
+                <div class="header-cell order-code">
+                    <span class="cell-label">Mã đặt món:</span>${datmon.MaDat}
+                </div>
+                <div class="header-cell order-total">
+                    <span class="cell-label">Tổng tiền:</span>
+                    ${datmon.TongTien?.toLocaleString('vi-VN') || '0'} VND
+                </div>
+            </div>
+        `);
+    });
+}
 
-        donHangFiltered.forEach(don => {
-            const donHangDiv = document.createElement("div");
-            donHangDiv.classList.add("don-hang");
+// Sự kiện
+window.addEventListener('DOMContentLoaded', async () => {
+    await taiToanBoMenu();
+    addOrder();
+});
 
-            let nutTheoDoi = "";
-            if (don.NguoiDat === username) {
-                nutTheoDoi = `<button class="theo-doi" data-id="${don.maDatMon}"><i class="material-icons">preview</i> Tiến trình</button>`;
-            }
+applyBtn.addEventListener('click', () => {
+    currentFilters = {
+        kieuDat: typeFilter.value,
+        trangThai: statusFilter.value
+    };
+    addOrder();
+    filterBtn.click();
+});
 
-            const formatter = new Intl.DateTimeFormat("vi-VN", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: false,
-            });
+resetBtn.addEventListener('click', () => {
+    typeFilter.value = 'Tất cả';
+    statusFilter.value = 'Tất cả';
+    currentFilters = {
+        kieuDat: 'Tất cả',
+        trangThai: 'Tất cả'
+    };
+    addOrder();
+    filterBtn.click();
+});
 
-            donHangDiv.innerHTML = `
-                <h2>Đơn: #${don.maDatMon}</h2>
-                <p><strong><i class="material-icons">schedule</i>Thời gian đặt:</strong> ${formatter.format(new Date(don.ThoiGianDat))}</p>
-                <p><strong><i class="material-icons">savings</i>Tổng tiền:</strong> ${don.TongTien.toLocaleString()} VNĐ</p>
-                <p class="trang-thai"><strong><i class="material-icons">info</i>Trạng thái:</strong> ${don.TrangThai}</p>
-                ${nutTheoDoi}
-            `;
-            donHangContainer.appendChild(donHangDiv);
-        });
+async function taiToanBoMenu() {
+    const danhSachDanhMuc = await layDanhSachDanhMuc();
 
-        // Xử lý sự kiện mở modal
-        document.querySelectorAll(".theo-doi").forEach(button => {
-            button.addEventListener("click", function () {
-                const maDatMon = this.getAttribute("data-id");
-                hienThiTienTrinhGiao(maDatMon);
-            });
-        });
+    for (const danhMuc of danhSachDanhMuc) {
+        const monAnTrongDanhMuc = await layDanhSachMonAn(danhMuc);
+        dsMonAn[danhMuc] = {};
 
-        // Đóng modal
-        document.querySelector(".close").addEventListener("click", function () {
-            document.getElementById("tracking-modal").style.display = "none";
-        });
-
-        window.addEventListener("click", function (event) {
-            const modal = document.getElementById("tracking-modal");
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
+        monAnTrongDanhMuc.forEach(mon => {
+            dsMonAn[danhMuc][mon.MaMon] = mon;
         });
     }
+    console.log('Đã tải', Object.keys(dsMonAn).length, 'danh mục');
+}
 
-    // Bắt sự kiện khi người dùng thay đổi checkbox
-    filterOnlineCheckbox.addEventListener("change", () => {
-        taiDonHang(); // Gọi lại để cập nhật danh sách đơn hàng
-    });
 
-    // Hàm hiển thị tiến trình giao hàng theo dạng timeline
-    async function hienThiTienTrinhGiao(maDatMon) {
-        const trackingTimeline = document.getElementById("tracking-timeline");
-        const trackingMessage = document.getElementById("tracking-message");
-        trackingTimeline.innerHTML = "<p>Đang tải...</p>";
-        trackingMessage.innerHTML = "";
 
-        try {
-            const donHangRef = ref(database, `DatMon/${maDatMon}`);
-            const snapshot = await get(donHangRef);
+// Thêm biến lưu trạng thái tìm kiếm
+let currentSearchTerm = '';
 
-            if (snapshot.exists()) {
-                const don = snapshot.val();
-                const trangThai = don.TrangThai;
+// Hàm tìm kiếm đơn hàng
+function timKiemDonDatMon(orders, searchTerm) {
+    if (!searchTerm.trim()) return orders;
 
-                // Danh sách trạng thái theo thứ tự
-                const trangThaiSteps = [
-                    "Đang xử lý",
-                    "Đang chuẩn bị",
-                    "Đang giao",
-                    "Hoàn tất"
-                ];
+    const searchLower = searchTerm.toLowerCase();
+    return orders.filter(order => {
+        // Tìm theo mã đơn
+        if (order.MaDat.toLowerCase().includes(searchLower)) return true;
 
-                // Danh sách icon tương ứng với trạng thái
-                const trangThaiIcons = {
-                    "Đang xử lý": "pending_actions", // ⏳
-                    "Đang chuẩn bị": "restaurant_menu", // 🍽️
-                    "Đang giao": "local_shipping", // 🚚
-                    "Hoàn tất": "check_circle" // ✅
-                };
+        // Tìm theo trạng thái
+        if (order.ThoiGianDat.toLowerCase().includes(searchLower)) return true;
 
-                // Thông điệp tương ứng với trạng thái
-                const trangThaiMessages = {
-                    "Đang xử lý": "Đơn đặt món của bạn đã được tiếp nhận! Chúng tôi sẽ xác nhận và xử lý trong thời gian sớm nhất.",
-                    "Đang chuẩn bị": "Bếp trưởng và đội ngũ đầu bếp đang tất bật chế biến món ăn cho bạn. Hãy kiên nhẫn chờ đợi một chút nhé!",
-                    "Đang giao": "Tài xế đang trên đường giao đơn đặt của bạn. Hãy đảm bảo điện thoại của bạn sẵn sàng để nhận hàng và chuẩn bị sẵn số tiền thanh toán nhé!",
-                    "Hoàn tất": "Đơn đặt món đã được giao thành công! Cảm ơn bạn đã ủng hộ. Chúc bạn có một bữa ăn ngon miệng!"
-                };
-
-                // Xác định trạng thái hiện tại
-                const trangThaiIndex = trangThaiSteps.indexOf(trangThai);
-                const progressWidth = trangThai === "Hoàn tất" ? 80 : (trangThaiIndex / (trangThaiSteps.length - 1)) * 100;
-
-                // Render giao diện tiến trình với icon
-                trackingTimeline.innerHTML = `
-                <div class="tracking-timeline">
-                    <div class="progress-bar" style="width: ${progressWidth}%;"></div>
-                    ${trangThaiSteps
-                        .map(
-                            (step, index) =>
-                                `<div>
-                                    <div class="tracking-step ${index <= trangThaiIndex ? "active" : ""}">
-                                        <i class="material-icons">${trangThaiIcons[step]}</i>
-                                    </div>
-                                    <div class="tracking-label">${step}</div>
-                                </div>`
-                        )
-                        .join("")}
-                </div>
-                `;
-                // Hiển thị thông điệp phù hợp
-                trackingMessage.innerHTML = trangThaiMessages[trangThai] || "Trạng thái không xác định.";
-
-            } else {
-                trackingTimeline.innerHTML = "<p>Không tìm thấy thông tin đơn hàng.</p>";
-            }
-        } catch (error) {
-            console.error("Lỗi tải tiến trình giao hàng:", error);
-            trackingTimeline.innerHTML = "<p>Lỗi tải dữ liệu.</p>";
+        // Tìm theo tổng tiền (nếu nhập số)
+        if (!isNaN(searchTerm) && order.TongTien) {
+            return order.TongTien.toString().includes(searchTerm);
         }
 
-        // Hiển thị modal
-        document.getElementById("tracking-modal").style.display = "flex";
-    }
+        return false;
+    });
+}
 
-    document.getElementById("btn-dat-mon").addEventListener("click", function () {
-        window.location.href = "index.html";
+// Sự kiện tìm kiếm với debounce
+let searchDebounce;
+document.querySelector('.search-bar').addEventListener('input', function (e) {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(() => {
+        currentSearchTerm = e.target.value;
+        boLocKetHop();
+    }, 300);
+});
+
+// Hàm kết hợp lọc và tìm kiếm
+async function boLocKetHop() {
+    if (!dsMonAn || Object.keys(dsMonAn).length === 0) return;
+
+    // Lấy toàn bộ đơn hàng đã lọc theo bộ lọc
+    let filteredOrders = (await layDanhSachDatMon()).filter(datMon => {
+        if (datMon.MaKhach !== username) return false;
+
+        if (currentFilters.kieuDat !== 'Tất cả') {
+            const isOnline = datMon.NguoiDat === username;
+            if (currentFilters.kieuDat === 'Đặt online' && !isOnline) return false;
+            if (currentFilters.kieuDat === 'Đặt tại nhà hàng' && isOnline) return false;
+        }
+
+        if (currentFilters.trangThai !== 'Tất cả' &&
+            datMon.TrangThai !== currentFilters.trangThai) return false;
+
+        return true;
     });
 
+    // Áp dụng tìm kiếm
+    const finalOrders = timKiemDonDatMon(filteredOrders, currentSearchTerm);
+    hienThiDonDatMon(finalOrders);
+}
 
-    taiDonHang();
+// Cập nhật các sự kiện lọc gọi boLocKetHop()
+document.querySelector('.filter-button.apply').addEventListener('click', boLocKetHop);
+document.querySelector('.filter-button.reset').addEventListener('click', function () {
+    document.querySelectorAll('.filter-menu select').forEach(select => {
+        select.selectedIndex = 0;
+    });
+    currentFilters = {
+        kieuDat: 'Tất cả',
+        trangThai: 'Tất cả'
+    };
+    document.querySelector('.search-bar').value = '';
+    currentSearchTerm = '';
+    boLocKetHop();
+});
+
+
+
+document.getElementById("btn-dat-mon").addEventListener("click", function () {
+    window.location.href = "index.html";
 });

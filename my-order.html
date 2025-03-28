@@ -1,36 +1,89 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đơn hàng của tôi</title>
+    <title>Document</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/my-order.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 
 <body>
-    <h1>Đơn hàng của tôi</h1>
-    <button id="btn-dat-mon">
-        <i class="material-icons">arrow_back</i>
-    </button>
-    <label>
-        <input type="checkbox" id="filter-online">
-        Chỉ hiển thị đơn đặt online của tôi
-    </label>
-    
-    <div id="don-hang-container"></div>
-
-    <!-- Modal hiển thị tiến trình giao đơn -->
-    <div id="tracking-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Tiến trình giao món ăn</h2>
-            <div id="tracking-timeline"></div>
-            <p id="tracking-message" class="tracking-message"></p>
+    <div class="container">
+        <div class="content">
+            <div class="content-header">
+                <h1 class="content-headerText">Đơn đặt món</h1>
+                <button class="mode-switch" title="Switch Theme">
+                    <i class='bx bxs-moon' id="moon"></i>
+                </button>
+                <button class="content-headerButton" id="btn-dat-mon">Thêm đơn</button>
+            </div>
+            <div class="hanh-dong">
+                <input class="search-bar" placeholder="Tìm kiếm..." type="text">
+                <div class="hanh-dong-wrapper">
+                    <div class="filter-button-wrapper">
+                        <button class="action-button filter jsFilter"><span>Lọc</span><i class='bx bx-filter-alt'></i></button>
+                        <div class="filter-menu">
+                            <label>Kiểu đặt</label>
+                            <select>
+                                <option>Tất cả</option>
+                                <option>Đặt online</option>
+                                <option>Đặt tại nhà hàng</option>
+                            </select>
+                            <label>Trạng thái</label>
+                            <select>
+                                <option>Tất cả</option>
+                                <option>Đang xử lý</option>
+                                <option>Đang chuẩn bị</option>
+                                <option>Đang giao</option>
+                                <option>Hoàn tất</option>
+                            </select>
+                            <div class="filter-menu-buttons">
+                                <button class="filter-button reset">
+                                    Đặt lại
+                                </button>
+                                <button class="filter-button apply">
+                                    Áp dụng
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="action-button list active" title="List View">
+                        <i class='bx bx-list-ul'></i>
+                    </button>
+                    <button class="action-button grid" title="Grid View">
+                        <i class='bx bxs-grid-alt'></i>
+                    </button>
+                </div>
+            </div>
+            <div class="table-wrapper tableView">
+                <div class="table-header">
+                    <div class="header-cell image">Danh sách món</div>
+                    <div class="header-cell order-type">Kiểu đặt<button class="sort-button"><i class='bx bx-sort'></i></button></div>
+                    <div class="header-cell order-status">Trạng thái<button class="sort-button"><i class='bx bx-sort'></i></button></div>
+                    <div class="header-cell order-time">Thời gian đặt<button class="sort-button"><i class='bx bx-sort'></i></button></div>
+                    <div class="header-cell order-code">Mã đặt món<button class="sort-button"><i class='bx bx-sort'></i></button></div>
+                    <div class="header-cell order-total">Tổng tiền<button class="sort-button"><i class='bx bx-sort'></i></button></div>
+                </div>
+                <!-- <div class="orders-row">
+                    <div class="header-cell image">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+                            alt="product">
+                        <span>+</span>
+                    </div>
+                    <div class="header-cell order-type"><span class="cell-label">Kiểu đặt:</span>Đặt online</div>
+                    <div class="header-cell order-status">
+                        <span class="cell-label">Trạng thái:</span>
+                        <span class="status active">Online</span>
+                    </div>
+                    <div class="header-cell order-time"><span class="cell-label">Thời gian đặt:</span>28/03/2025 18:39:52</div>
+                    <div class="header-cell order-code"><span class="cell-label">Mã đặt món:</span>DAT222</div>
+                    <div class="header-cell order-total"><span class="cell-label">Tổng tiền:</span>22.000 VND</div>
+                </div> -->
+            </div>
         </div>
     </div>
-    
     <script type="module" src="js/my-order.js"></script>
 </body>
 
