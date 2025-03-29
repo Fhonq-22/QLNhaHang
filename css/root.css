@@ -22,10 +22,9 @@ body {
     font-family: var(--font-chinh);
     background-color: var(--mau-nen);
     color: var(--mau-chu);
-    text-align: center;
 }
 
-button {
+/* button {
     background-color: var(--mau-nut);
     color: white;
     border: none;
@@ -37,7 +36,7 @@ button {
 
 button:hover {
     background-color: darkred;
-}
+} */
 
 i{
     vertical-align: middle !important;

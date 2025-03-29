@@ -1,0 +1,600 @@
+@import url("root.css");
+
+/* === HEADER === */
+header {
+    background-color: var(--mau-phu);
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: var(--do-bong);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+}
+
+#gio-hang-container {
+    position: relative;
+    display: inline-block;
+}
+
+#btn-gio-hang:hover {
+    background-color: var(--mau-nut);
+}
+
+
+main {
+    margin-top: 180px;
+    min-height: calc(100vh - 180px - 250px);
+}
+
+/* === BỘ LỌC === */
+.bo-loc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.bo-loc select,
+.bo-loc input {
+    padding: 10px;
+    border: 2px solid var(--mau-chu-dao);
+    border-radius: var(--bo-goc);
+    font-size: 16px;
+    outline: none;
+}
+
+.bo-loc input {
+    width: 300px;
+}
+
+/* === DANH SÁCH MÓN ĂN === */
+.danh-sach-mon-an {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: var(--do-rong-max);
+    margin: auto;
+    padding: 20px;
+}
+
+/* === MÓN ĂN === */
+.mon-an {
+    position: relative;
+    background: white;
+    padding: 15px;
+    border-radius: var(--bo-goc);
+    box-shadow: var(--do-bong);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+
+/* === HÌNH ẢNH MÓN ĂN === */
+.mon-an img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: var(--bo-goc);
+}
+
+/* === TÊN MÓN ĂN === */
+.ten-mon {
+    font-size: 20px;
+    color: var(--mau-chu-dao);
+    margin: 10px 0;
+}
+
+/* === MÔ TẢ MÓN === */
+.mo-ta-mon {
+    font-size: 14px;
+    color: var(--mau-phu);
+    margin-bottom: 8px;
+}
+
+/* === GIÁ MÓN === */
+.gia-mon {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--mau-nut);
+}
+
+/* Nút "Thêm vào giỏ hàng" */
+.them-vao-gio {
+    background-color: var(--mau-diem-nhan);
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: var(--bo-goc);
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.them-vao-gio:hover {
+    background-color: var(--mau-nut);
+    transform: scale(1.05);
+}
+
+
+
+/* --------------------------- */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+}
+
+#gio-hang-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    width: 300px;
+    text-align: center;
+}
+
+#gio-hang-popup ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+#gio-hang-popup li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* === FORM ĐẶT MÓN === */
+#form-dat-mon {
+    max-width: 400px;
+    background: var(--mau-nen);
+    border-radius: var(--bo-goc);
+    box-shadow: var(--do-bong);
+    padding: 20px;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid var(--mau-chu-dao);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 999;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+#form-dat-mon h2 {
+    color: var(--mau-chu-dao);
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+#form-dat-mon label {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: var(--mau-chu);
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+#form-dat-mon input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+#form-dat-mon input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--mau-chu-dao);
+    border-radius: var(--bo-goc);
+    font-size: 16px;
+    outline: none;
+    background: white;
+    transition: border-color 0.3s ease-in-out;
+    margin-bottom: 12px;
+}
+
+#form-dat-mon input:focus {
+    border-color: var(--mau-nut);
+}
+
+/* Định dạng cho input bị disabled */
+#form-dat-mon input:disabled {
+    background-color: #eee;
+    color: #777;
+    cursor: not-allowed;
+}
+
+/* === NÚT BẤM === */
+#form-dat-mon button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: var(--bo-goc);
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#xac-nhan-dat-mon {
+    background-color: var(--mau-nut);
+    color: white;
+    margin-bottom: 10px;
+}
+
+#xac-nhan-dat-mon:hover {
+    background-color: darkred;
+    transform: scale(1.05);
+}
+
+#huy-dat-mon {
+    background-color: var(--mau-diem-nhan);
+    color: var(--mau-chu);
+}
+
+#huy-dat-mon:hover {
+    background-color: rgb(255, 150, 100);
+    transform: scale(1.05);
+}
+
+
+/* === THÔNG TIN KHÁCH HÀNG === */
+.modal {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Khi mở modal */
+.modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: white;
+    padding: 25px;
+    width: 40%;
+    max-width: 450px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+/* Khi modal mở thì nội dung trượt xuống */
+.modal.show .modal-content {
+    transform: translateY(0);
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #555;
+    transition: color 0.2s ease;
+}
+
+.close:hover {
+    color: red;
+}
+
+/* Group input và label trên cùng một hàng */
+.input-group {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.input-group label {
+    flex: 1;
+    font-weight: bold;
+    margin-right: 10px;
+    text-align: left;
+}
+
+.input-group input {
+    flex: 9;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Input bị khóa */
+.input-group input[disabled] {
+    background: #f5f5f5;
+    color: #888;
+    cursor: not-allowed;
+}
+
+/* Nút */
+.modal-content button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#btn-cap-nhat {
+    background: #28a745;
+    color: white;
+}
+
+#btn-cap-nhat:hover {
+    background: #218838;
+}
+
+#btn-logout {
+    background: #dc3545;
+    color: white;
+}
+
+#btn-logout:hover {
+    background: #c82333;
+}
+
+
+
+.fly-item {
+    position: fixed;
+    z-index: 1000;
+    font-size: 24px;
+    transition: transform 1.5s ease-in-out, opacity 1.5s ease-in-out;
+}
+
+
+
+
+/* === FOOTER === */
+footer {
+    min-height: 250px;
+    background-color: var(--mau-phu);
+    color: var(--mau-nen);
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: var(--do-bong);
+}
+
+.footer-container {
+    max-width: var(--do-rong-max);
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.footer-info,
+.footer-social,
+.footer-map {
+    flex: 1;
+    min-width: 250px;
+    padding: 10px;
+}
+
+.footer-social a {
+    color: var(--mau-diem-nhan);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer-social a:hover {
+    color: var(--mau-nut);
+}
+
+.footer-bottom {
+    margin-top: 15px;
+    font-size: 14px;
+    color: var(--mau-phu);
+}
+
+
+nav {
+    position: relative;
+}
+
+/* Danh sách menu */
+.menu {
+    display: flex;
+    width: 100%;
+    height: 80px;
+    list-style: none;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 20px;
+    gap: 2%;
+}
+
+.menu li {
+    cursor: pointer;
+    position: relative;
+    height: 100%;
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.menu li i {
+    position: relative;
+    font-size: 1.5em;
+    color: var(--mau-chu-dao);
+    z-index: 5;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.menu li:before {
+    content: "";
+    position: absolute;
+    height: 72px;
+    width: 72px;
+    border-radius: 50%;
+    background-color: var(--mau-nen);
+    z-index: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(10%, 0%) scale(0);
+}
+
+.menu li.active i {
+    color: var(--mau-chu);
+}
+
+.menu li.active:before {
+    opacity: 1;
+    visibility: visible;
+    left: -18px;
+    transform: translate(0%, 0%) scale(1);
+    transition: all 0.4s ease-in-out;
+}
+
+
+
+.menu li .tieu-de {
+    border-radius: 8px;
+    padding: 5px 10px;
+    white-space: nowrap;
+    width: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(100%, 0%) scale(0.5);
+    transition: all 0.6s ease;
+}
+
+.menu li.active .tieu-de {
+    width: auto;
+    border-radius: 12px;
+    padding: 10px;
+    color: var(--mau-chu);
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0%, 0%) scale(1);
+}
+
+span#so-luong-gio-hang {
+    position: absolute;
+    top: 12%;
+    left: 32%;
+    z-index: 12;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    background: var(--mau-nut);
+}
+
+.menu li.active span#so-luong-gio-hang{
+    top: 12%;
+    left: 8%;
+}
+
+
+
+
+#btn-len-dau-trang {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--mau-nut);
+    color: var(--mau-nen);
+    padding: 10px 15px;
+    border-radius: 20px 0 0 20px;
+    border: 2px var(--mau-nen) solid;
+    cursor: pointer;
+    display: none; /* Ẩn ban đầu */
+    font-size: 18px;
+    text-align: center;
+    box-shadow: var(--do-bong);
+    transition: all 0.3s ease-in-out;
+}
+
+#btn-len-dau-trang:hover {
+    border-color: var(--mau-chu);
+    background-color: var(--mau-chu-dao);
+}
+
+
+
+.mon-an .hover-mon{
+    position: absolute;
+    top: 8%;
+    right: 8%;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.mon-an:hover .hover-mon{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    opacity: 1;
+    visibility: visible;
+}
+
+.mon-an .hover-mon button.tim-kiem-tuong-tu,
+.mon-an .hover-mon button.them-1-vao-gio{
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 50px;
+    cursor: pointer;
+    transform: translate(100%, 0%);
+    transition: all 0.6s ease;
+}
+
+.mon-an .hover-mon button.them-1-vao-gio{
+    transition: all 0.8s ease;
+}
+
+.mon-an:hover .hover-mon button {
+    transform: translate(0%, 0%);
+}

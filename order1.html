@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Giỏ Hàng</title>
+    <link rel="stylesheet" href="css/order1.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/effect.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+    <header>
+        <h3>🍽️ Đặt món - Online</h3>
+        <nav>
+            <ul class="menu">
+                <li data-mau="#fffff5" class="bo-loc">
+                    <i class="material-icons">search</i>
+                    <div class="tieu-de">
+                        <input type="text" id="tim-kiem" placeholder="Tìm kiếm món ăn...">
+                    </div>
+                </li>
+                <li data-mau="#fffff5" id="gio-hang-container">
+                    <i class="material-icons">shopping_cart</i>
+                    <span id="so-luong-gio-hang">0</span>
+                    <div class="tieu-de" id="btn-gio-hang">Xem chi tiết
+                        <i class="material-icons">visibility</i>
+                    </div>
+                </li>
+                <li data-mau="#fffff5" id="lich-su-container" style="display: none;">
+                    <i class="material-icons">history</i>
+                    <div class="tieu-de" id="btn-lich-su">Lịch sử đặt
+                        <i class="material-icons">arrow_forward</i>
+                    </div>
+                </li>
+                <li data-mau="#fffff5" id="user-info">
+                    <i class="material-icons">account_circle</i>
+                    <div class="tieu-de" id="btn-user" onclick="handleUserClick()">Đăng nhập</div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="bo-loc">
+            <select id="chon-danh-muc">
+                <option value="tat-ca">Tất cả</option>
+            </select>
+        </div>
+        <div class="danh-sach-mon-an" id="danh-sach-mon-an"></div>
+
+        <div id="overlay" class="hidden"></div>
+        <div id="gio-hang-popup" class="hidden">
+            <h2>🛒 Giỏ hàng</h2>
+            <ul id="gio-hang-chi-tiet"></ul>
+
+            <button id="dong-gio-hang">Đóng</button>
+        </div>
+
+        <div id="form-dat-mon" class="hidden">
+            <h2>📦 Đặt Món</h2>
+            <label>
+                <input type="checkbox" id="tu-tao-ma"> Tự tạo mã đặt món
+            </label>
+            <input type="text" id="ma-dat-mon" placeholder="Nhập mã đặt món" disabled>
+            <button id="xac-nhan-dat-mon">Xác nhận đặt món</button>
+            <button id="huy-dat-mon">Hủy</button>
+        </div>
+
+        <div id="user-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Thông Tin Tài Khoản</h2>
+
+                <div class="input-group">
+                    <label>
+                        <i class="material-icons">person</i>
+                    </label>
+                    <input type="text" id="ho-ten">
+                </div>
+                <div class="input-group">
+                    <label>
+                        <i class="material-icons">calendar_today</i>
+                    </label>
+                    <input type="date" id="ngay-sinh">
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <i class="material-icons">location_on</i>
+                    </label>
+                    <input type="text" id="dia-chi">
+                </div>
+                <div class="input-group">
+                    <label>
+                        <i class="material-icons">favorite</i>
+                    </label>
+                    <input type="text" id="mon-yeu-thich">
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <i class="material-icons">workspace_premium</i>
+                    </label>
+                    <input type="text" id="hang-thanh-vien" disabled>
+                </div>
+                <div class="input-group">
+                    <label>
+                        <i class="material-icons">star</i>
+                    </label>
+                    <input type="number" id="diem-tich-luy" disabled>
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        <i class="material-icons">payments</i>
+                    </label>
+                    <input type="text" id="tong-chi-tieu" disabled>
+                </div>
+
+                <button id="btn-cap-nhat">
+                    <i class="material-icons">update</i> Cập nhật
+                </button>
+                <button id="btn-logout">
+                    <i class="material-icons">logout</i> Đăng xuất
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-info">
+                <h3>🍕 Sang Diego Pizza & Grill</h3>
+                <p>
+                    <i class="material-icons">pin_drop</i> Địa chỉ: 305 Lương Ngọc Quyến, Hoàng Văn Thụ, TP.Thái Nguyên
+                </p>
+                <p>
+                    <i class="material-icons">call</i> Hotline: 0208 730 0068
+                </p>
+                <p>
+                    <i class="material-icons">mail</i> Email: contact@sangdiego.vn
+                </p>
+                <p>
+                    <i class="material-icons">schedule</i> Giờ mở cửa: 08:00 - 22:30 hàng ngày
+                </p>
+            </div>
+
+            <div class="footer-social">
+                <h3>Kết nối với chúng tôi</h3>
+                <a href="https://facebook.com" target="_blank">
+                    <i class="material-icons">link</i> Facebook
+                </a>
+                <a href="https://instagram.com" target="_blank">
+                    <i class="material-icons">link</i> Instagram
+                </a>
+                <a href="https://tiktok.com" target="_blank">
+                    <i class="material-icons">link</i> TikTok
+                </a>
+            </div>
+
+            <div class="footer-map">
+                <h3>Bản đồ</h3>
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3709.8025654753424!2d105.82296787381594!3d21.593628468140878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135270851b1752d%3A0xfe92c9d4058193b3!2sSang%20Diego%20Pizza%20%26%20Grill%20Th%C3%A1i%20Nguy%C3%AAn!5e0!3m2!1svi!2s!4v1742663582659!5m2!1svi!2s"
+                    width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sang Diego Pizza & Grill - Thái Nguyên. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="btn-len-dau-trang">
+        <i class="material-icons">arrow_upward</i> Lên đầu trang
+    </div>    
+
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/order1.js"></script>
+</body>
+</html>
