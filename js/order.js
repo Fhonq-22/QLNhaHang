@@ -17,7 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function capNhatSoLuongGioHang() {
         localStorage.setItem("gioHang", JSON.stringify(gioHang));
-        document.getElementById('so-luong-gio-hang').textContent = Object.values(gioHang).reduce((acc, sl) => acc + sl, 0);
+        document.querySelector('i#gio-hang-icon span.so-luong-gio-hang').textContent = Object.values(gioHang).reduce((acc, sl) => acc + sl, 0);
+        document.querySelector('a#gio-hang-open i span.so-luong-gio-hang').textContent = Object.values(gioHang).reduce((acc, sl) => acc + sl, 0);
     }
 
     function themVaoGioHang(maMon, btnBatDau) {

@@ -103,7 +103,7 @@ i#gio-hang-icon, a#gio-hang-open i{
     text-align: center;
 }
 
-i span#so-luong-gio-hang {
+i span.so-luong-gio-hang {
     position: absolute;
     top: -10px;
     left: 10px;
