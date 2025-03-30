@@ -37,12 +37,12 @@
                 </li>
             </ul>
             <div class="nav-icons">
-                <span class="nav-icon"><i class='bx bxs-cart'></i></span>
-                <span class="nav-icon"><i class='bx bx-user-circle'></i></span>
+                <span class="nav-icon"><i class='bx bxs-cart' id="gio-hang-icon"><span id="so-luong-gio-hang">0</span></i></span>
+                <span class="nav-icon user-info"><i class='bx bx-user-circle user-icon'></i></span>
             </div>
         </div>
     </nav>
-
+    
     <!-- Sidebar -->
     <aside>
         <div class="sidebar" id="sidebar">
@@ -64,8 +64,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="sidebar-link">
-                        <span><i class='bx bxs-cart'></i></span>
+                    <a href="#" class="sidebar-link" id="gio-hang-open">
+                        <span><i class='bx bxs-cart'><span id="so-luong-gio-hang">0</span></i></span>
                         <span>Giỏ hàng</span>
                     </a>
                 </li>
@@ -86,8 +86,8 @@
                 <div class="sidebar-footer-bg"></div>
                 <div class="sidebar-footer-content">
                     <div class="user-info">
-                        <i class='bx bx-user-circle'></i>
-                        <h3 class="font-semibold">Tên người dùng</h3>
+                        <i class='bx bx-user-circle user-icon'></i>
+                        <h3 class="font-semibold">Đăng nhập</h3>
                     </div>
                     <a href="#" class="font-semibold">
                         <i class='bx bxs-log-out'></i>
@@ -108,7 +108,7 @@
                     <!-- Filters -->
                     <div class="filters">
                         <form action="">
-                            <input type="text" name="search" placeholder="Tìm kiếm..." class="search-input">
+                            <input type="text" name="search" placeholder="Tìm kiếm..." id="tim-kiem-input">
                             <div class="filter-group">
                                 <h5 class="filter-title">Danh mục</h5>
                                 <select name="danh-muc" id="danh-muc-select">
@@ -133,15 +133,15 @@
                                 <button class="view-btn grid-view"><i class='bx bxs-grid-alt'></i></button>
                                 <button class="view-btn list-view"><i class='bx bx-list-ul'></i></button>
                             </div>
-                            <p class="products-count">2 món</p>
+                            <p id="so-luong-mon">0 món</p>
                             <hr class="divider-line">
                             <form action="" class="sort-form">
                                 <label for="sort">Sắp xếp theo</label>
                                 <select name="sort" id="sort" class="sort-select">
-                                    <option value="price-lowest">price (lowest)</option>
-                                    <option value="price-highest">price (highest)</option>
-                                    <option value="name-a">name (a - z)</option>
-                                    <option value="name-z">name (z - a)</option>
+                                    <option value="gia-thap">giá (thấp nhất)</option>
+                                    <option value="gia-cao">giá (cao nhất)</option>
+                                    <option value="ten-a">tên (a - z)</option>
+                                    <option value="ten-z">tên (z - a)</option>
                                 </select>
                             </form>
                         </div>
@@ -170,6 +170,69 @@
                 </div>
             </div>
         </div>
+
+        <div id="overlay" class="hidden"></div>
+        <div id="gio-hang-modal" class="hidden">
+            <h2>🛒 Giỏ hàng</h2>
+            <ul id="gio-hang-chi-tiet"></ul>
+
+            <button id="dong-gio-hang">Đóng</button>
+        </div>
+
+        <div id="dat-mon-modal" class="hidden">
+            <h2>📦 Đặt Món</h2>
+            <label>
+                <input type="checkbox" id="tu-tao-ma"> Tự tạo mã đặt món
+            </label>
+            <input type="text" id="ma-dat-mon" placeholder="Nhập mã đặt món" disabled>
+            <button id="xac-nhan-dat-mon">Xác nhận đặt món</button>
+            <button id="huy-dat-mon">Hủy</button>
+        </div>
+
+        <div id="user-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Thông Tin Tài Khoản</h2>
+
+                <div class="input-group">
+                    <label><i class='bx bxs-user-rectangle'></i></label>
+                    <input type="text" id="ho-ten">
+                </div>
+                <div class="input-group">
+                    <label><i class='bx bxs-cake'></i></label>
+                    <input type="date" id="ngay-sinh">
+                </div>
+
+                <div class="input-group">
+                    <label><i class='bx bxs-map'></i></label>
+                    <input type="text" id="dia-chi">
+                </div>
+                <div class="input-group">
+                    <label><i class='bx bxs-heart'></i></label>
+                    <input type="text" id="mon-yeu-thich">
+                </div>
+                <div class="input-group">
+                    <label><i class='bx bxs-trophy'></i></label>
+                    <input type="text" id="hang-thanh-vien" disabled>
+                </div>
+                <div class="input-group">
+                    <label><i class='bx bxs-star'></i></label>
+                    <input type="number" id="diem-tich-luy" disabled>
+                </div>
+
+                <div class="input-group">
+                    <label><i class='bx bxs-badge-dollar'></i></label>
+                    <input type="text" id="tong-chi-tieu" disabled>
+                </div>
+
+                <button id="btn-cap-nhat">
+                    <i class='bx bxs-pencil'></i> Cập nhật
+                </button>
+                <button id="btn-logout">
+                    <i class='bx bxs-log-out'></i> Đăng xuất
+                </button>
+            </div>
+        </div>
     </main>
 
     <footer id="footer">
@@ -179,7 +242,7 @@
                 <span>
                     <p><i class='bx bxs-map'></i> Địa chỉ: 305 Lương Ngọc Quyến, Hoàng Văn Thụ, TP.Thái Nguyên</p>
                     <p><i class='bx bxs-phone'></i> Hotline: 0208 730 0068</p>
-                    <p><i class='bx bxl-gmail'></i> Email: contact@sangdiego.vn</p>
+                    <p><i class='bx bxs-envelope'></i> Email: contact@sangdiego.vn</p>
                     <p><i class='bx bxs-time'></i> Giờ mở cửa: 08:00 - 22:30 hàng ngày</p>
                 </span>
             </div>
@@ -193,7 +256,7 @@
                     <i class='bx bxl-instagram-alt'></i> Instagram
                 </a>
                 <a href="https://tiktok.com/@fhonq.22" target="_blank">
-                    <i class='bx bxl-tiktok' ></i> TikTok
+                    <i class='bx bxl-tiktok'></i> TikTok
                 </a>
             </div>
 

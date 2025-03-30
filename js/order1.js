@@ -295,7 +295,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-
     // Xử lý đóng modal
     closeModal.addEventListener("click", function () {
         userModal.style.display = "none";
