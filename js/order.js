@@ -15,6 +15,12 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('sidebar').classList.remove('active');
     });
 
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.addEventListener('click', function() {
+            document.getElementById('close-sidebar').click();
+        });
+    });
+
     function capNhatSoLuongGioHang() {
         localStorage.setItem("gioHang", JSON.stringify(gioHang));
         document.querySelector('i#gio-hang-icon span.so-luong-gio-hang').textContent = Object.values(gioHang).reduce((acc, sl) => acc + sl, 0);
@@ -62,7 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.querySelectorAll("#gio-hang-open, #gio-hang-icon").forEach(el => {
         el.addEventListener("click", () => {
-            document.getElementById('close-sidebar').click();
             hienThiGioHang();
             document.getElementById("gio-hang-modal").classList.remove("hidden");
             document.getElementById("overlay").classList.remove("hidden");
