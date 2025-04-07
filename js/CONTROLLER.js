@@ -131,6 +131,14 @@ export async function xoaMonAn(danhMuc, maMon) {
 
 // #region XỬ LÝ KHACHHANG
 /**
+ * Thêm mới khách hàng
+ * @param {KhachHang} khach - Đối tượng khách hàng cần thêm
+ */
+export async function themKhachHang(khach) {
+    await addData("KhachHang", khach.SDT, new KhachHang(...Object.values(khach)).toJSON());
+}
+
+/**
  * Lấy thông tin khách hàng từ database
  * @param {string} SDT - Số điện thoại khách hàng (dùng làm key)
  * @returns {KhachHang|null}

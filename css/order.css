@@ -746,16 +746,18 @@ footer {
 
 #dat-mon-modal label {
     display: flex;
-    align-items: center;
     font-weight: bold;
     color: var(--mau-chu);
     margin-bottom: 10px;
     cursor: pointer;
+    align-items: center;
 }
 
 #dat-mon-modal input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    margin: 0;
     margin-right: 8px;
-    transform: scale(1.2);
     cursor: pointer;
 }
 

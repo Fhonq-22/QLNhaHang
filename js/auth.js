@@ -1,4 +1,4 @@
-import { layNguoiDung, themNguoiDung } from "./CONTROLLER.js";
+import { layNguoiDung, themNguoiDung, layKhachHang, themKhachHang } from "./CONTROLLER.js";
 import { kiemTraChuyenHuong } from './kiemTraDuongDan.js';
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -89,6 +89,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 VaiTro: "Khách hàng"
             };
             await themNguoiDung(nguoiDung);
+            if (!(await layKhachHang(nguoiDung.TenNguoiDung))) {
+                const khachHangMoi = {
+                    SDT: nguoiDung.TenNguoiDung,
+                    HoTen: "",
+                    NgaySinh: "",
+                    DiaChi: "",
+                    MonYeuThich: "",
+                    HangThanhVien: "Thường",
+                    DiemTichLuy: 0,
+                    DiemChiTieu: 0
+                };
+                await themKhachHang(khachHangMoi);
+            }
             alert("Đăng ký thành công!");
             document.getElementById("ten-dang-nhap").value = username;
             document.getElementById("mat-khau-dang-nhap").value = password;
