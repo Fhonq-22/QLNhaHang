@@ -86,7 +86,7 @@ function hienThiDonDatMon(orders) {
         }
         const soMonKhac = Object.keys(datmon.DanhSachMon).length - 1;
         tableWrapper.insertAdjacentHTML('beforeend', `
-            <div class="orders-row">
+            <div class="orders-row" data-trangthai="${datmon.TrangThai}">
                 <div class="header-cell image">
                     <img src="${monChinh.HinhAnh}" alt="${monChinh.TenMon}">
                     ${soMonKhac > 0 ? `<span>+${soMonKhac} món khác</span>` : ``}
@@ -121,6 +121,26 @@ function hienThiDonDatMon(orders) {
                 </div>
             </div>
         `);
+    });
+
+    // Xử lý sự kiện mở modal
+    document.querySelectorAll(".orders-row").forEach(button => {
+        button.addEventListener("click", function () {
+            const trangThai = this.getAttribute("data-trangthai");
+            hienThiTienTrinhGiao(trangThai);
+        });
+    });
+
+    // Đóng modal
+    document.querySelector(".close").addEventListener("click", function () {
+        document.getElementById("tracking-modal").style.display = "none";
+    });
+
+    window.addEventListener("click", function (event) {
+        const modal = document.getElementById("tracking-modal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
     });
 }
 
@@ -240,7 +260,76 @@ document.querySelector('.filter-button.reset').addEventListener('click', functio
     boLocKetHop();
 });
 
+// Hàm hiển thị tiến trình giao hàng theo dạng timeline
+async function hienThiTienTrinhGiao(trangThai) {
+    const trackingTimeline = document.getElementById("tracking-timeline");
+    const trackingMessage = document.getElementById("tracking-message");
+    trackingTimeline.innerHTML = "<p>Đang tải...</p>";
+    trackingMessage.innerHTML = "";
 
+    try {
+        // Danh sách trạng thái theo thứ tự
+        const trangThaiSteps = [
+            "Đang xử lý",
+            "Đang chuẩn bị",
+            "Đang giao",
+            "Hoàn tất"
+        ];
+
+        // Kiểm tra nếu trạng thái không hợp lệ
+        if (!trangThaiSteps.includes(trangThai)) {
+            trackingTimeline.innerHTML = "<p>Trạng thái không hợp lệ</p>";
+            return;
+        }
+
+        // Danh sách icon tương ứng với trạng thái
+        const trangThaiIcons = {
+            "Đang xử lý": "bx bx-time",          // Icon đồng hồ
+            "Đang chuẩn bị": "bx bx-restaurant", // Icon nhà hàng/nấu ăn
+            "Đang giao": "bx bxs-truck",          // Icon xe tải giao hàng
+            "Hoàn tất": "bx bx-check-circle"     // Icon dấu tích hoàn thành
+        };
+
+        // Thông điệp tương ứng với trạng thái
+        const trangThaiMessages = {
+            "Đang xử lý": "Đơn đặt món của bạn đã được tiếp nhận! Chúng tôi sẽ xác nhận và xử lý trong thời gian sớm nhất.",
+            "Đang chuẩn bị": "Bếp trưởng và đội ngũ đầu bếp đang tất bật chế biến món ăn cho bạn. Hãy kiên nhẫn chờ đợi một chút nhé!",
+            "Đang giao": "Tài xế đang trên đường giao đơn đặt của bạn. Hãy đảm bảo điện thoại của bạn sẵn sàng để nhận hàng và chuẩn bị sẵn số tiền thanh toán nhé!",
+            "Hoàn tất": "Đơn đặt món đã được giao thành công! Cảm ơn bạn đã ủng hộ. Chúc bạn có một bữa ăn ngon miệng!"
+        };
+
+        // Xác định trạng thái hiện tại
+        const trangThaiIndex = trangThaiSteps.indexOf(trangThai);
+        const progressWidth = trangThai === "Hoàn tất" ? 80 : (trangThaiIndex / (trangThaiSteps.length - 1)) * 100;
+
+        // Render giao diện tiến trình với icon
+        trackingTimeline.innerHTML = `
+        <div class="tracking-timeline">
+            <div class="progress-bar" style="width: ${progressWidth}%;"></div>
+            ${trangThaiSteps
+                .map(
+                    (step, index) =>
+                        `<div>
+                            <div class="tracking-step ${index <= trangThaiIndex ? "active" : ""}">
+                                <i class="${trangThaiIcons[step]}"></i>
+                            </div>
+                            <div class="tracking-label">${step}</div>
+                        </div>`
+                )
+                .join("")}
+        </div>
+        `;
+        
+        // Hiển thị thông điệp phù hợp
+        trackingMessage.innerHTML = trangThaiMessages[trangThai] || "Trạng thái không xác định.";
+
+        // Hiển thị modal
+        document.getElementById("tracking-modal").style.display = "flex";
+    } catch (error) {
+        console.error("Lỗi tải tiến trình giao hàng:", error);
+        trackingTimeline.innerHTML = "<p>Lỗi tải dữ liệu.</p>";
+    }
+}
 
 document.getElementById("btn-dat-mon").addEventListener("click", function () {
     window.location.href = "index.html";
