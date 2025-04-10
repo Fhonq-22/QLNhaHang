@@ -234,7 +234,7 @@ i span.so-luong-gio-hang {
     position: sticky;
     z-index: 999;
     top: 47px;
-    background: linear-gradient(120deg, #f5d1bd 0%, #f3c3cf 100%);
+    background: #f5d1bd;
     padding-bottom: 12px;
 }
 
