@@ -223,6 +223,24 @@ document.addEventListener("DOMContentLoaded", function () {
             useGrouping: true
         });
         document.getElementById('price').textContent = formattedValue;
+
+        const currentCategory = document.getElementById("danh-muc-select").value;
+        const currentSearch = document.getElementById("tim-kiem-input").value;
+        hienThiDanhSachMonAnUI(currentCategory, currentSearch, value);
+    });
+
+    chonDanhMuc.addEventListener("change", () => hienThiDanhSachMonAnUI(chonDanhMuc.value, document.getElementById("tim-kiem-input").value), document.querySelector('input[name="price"]').value);
+    document.getElementById("tim-kiem-input").addEventListener("input", () => hienThiDanhSachMonAnUI(chonDanhMuc.value, document.getElementById("tim-kiem-input").value), document.querySelector('input[name="price"]').value);
+    
+    document.querySelector(".clear-btn").addEventListener("click", () => {
+        document.getElementById("tim-kiem-input").value = "";
+        document.getElementById("danh-muc-select").value = "Tất cả";
+        document.querySelector(".price-slider").value = document.querySelector(".price-slider").max;
+        document.getElementById('price').textContent = 
+            parseInt(document.querySelector(".price-slider").max).toLocaleString('vi-VN') + ' ₫';
+    
+        // Gọi lại hàm hiển thị
+        hienThiDanhSachMonAnUI("tat-ca", "", document.querySelector(".price-slider").max);
     });
 
     async function layDanhSachDanhMucUI() {
@@ -232,18 +250,13 @@ document.addEventListener("DOMContentLoaded", function () {
         chonDanhMuc.innerHTML = `<option value="tat-ca">Tất cả</option>` +
             danhMucList.map(danhMuc => `<option value="${danhMuc}">${danhMuc}</option>`).join("");
     }
-
-    chonDanhMuc.addEventListener("change", () => hienThiDanhSachMonAnUI(chonDanhMuc.value, document.getElementById("tim-kiem-input").value));
-    document.getElementById("tim-kiem-input").addEventListener("input", () => hienThiDanhSachMonAnUI(chonDanhMuc.value, document.getElementById("tim-kiem-input").value));
-
-
     layDanhSachDanhMucUI();
     // #endregion
 
     // #region Products-display: Hiển thị món ăn, mở modal thêm món vào giỏ
     const danhSachMonAn = document.getElementById("danh-sach-mon-an");
 
-    async function hienThiDanhSachMonAnUI(danhMucDaChon = "tat-ca", tuKhoaTimKiem = "") {
+    async function hienThiDanhSachMonAnUI(danhMucDaChon = "tat-ca", tuKhoaTimKiem = "", giaToiDa = 2200000) {
         danhSachMonAn.innerHTML = "";
         try {
             // document.getElementById("btn-len-dau-trang").click();
@@ -258,6 +271,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 [mon.DanhMuc, mon.TenMon, mon.MoTa, mon.Gia?.toString()]
                     .some(field => field?.toLowerCase().includes(tuKhoa))
             );
+            // Sau đó lọc theo giá
+            danhSachMon = giaToiDa==0? [] : danhSachMon.filter(mon => mon.Gia <= giaToiDa);
 
             document.getElementById("so-luong-mon").textContent = `${danhSachMon.length} món`;
             const fragment = document.createDocumentFragment();
