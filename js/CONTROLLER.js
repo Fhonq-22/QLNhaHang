@@ -67,7 +67,7 @@ export async function themMonAn(danhMuc, maMon, monAn) {
  * @returns {Menu|null} - Đối tượng món ăn hoặc null nếu không tồn tại
  */
 export async function layMonAn(danhMuc, maMon) {
-    const data = await getData(`Menu/${danhMuc}/${maMon}`);
+    const data = await getData(`Menu/${danhMuc}`, maMon);
     return data ? new Menu(danhMuc, maMon, data.TenMon, data.MoTa, data.Gia, data.HinhAnh) : null;
 }
 

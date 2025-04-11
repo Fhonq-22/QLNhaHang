@@ -1,4 +1,4 @@
-import { layNguoiDung, layDanhSachDanhMuc, layDanhSachMonAn, layKhachHang, suaKhachHang, themDatMon } from "./CONTROLLER.js";
+import { layNguoiDung, layDanhSachDanhMuc, layDanhSachMonAn, layKhachHang, suaKhachHang, themDatMon, timDanhMucTuMaMon, layMonAn } from "./CONTROLLER.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     // Local Storage
@@ -295,37 +295,63 @@ document.addEventListener("DOMContentLoaded", function () {
                 //     if (e.target.classList.contains("them-vao-gio")) themVaoGioHang(e.target.dataset.mamon, e.target);
                 // });
 
-                monAnDiv.querySelector(".them-vao-gio").addEventListener("click", (e) => {
+                monAnDiv.querySelector(".them-vao-gio").addEventListener("click", async (e) => {
                     if (e.target.classList.contains("them-vao-gio")) {
-                        // Lưu thông tin món ăn vào biến tạm
                         const maMon = e.target.dataset.mamon;
                         const targetElement = e.target;
                         
-                        // Hiển thị modal
-                        const modal = document.getElementById("them-vao-gio-modal");
-                        modal.style.display = "flex";
-                        modal.classList.add("show");
-                        
-                        // Thêm sự kiện cho nút xác nhận trong modal
-                        document.getElementById("btn-xac-nhan").onclick = function() {
-                            // Lấy giá trị từ input
-                            const soLuong = document.getElementById("so-luong").value;
+                        try {
+                            // 1. Tìm danh mục
+                            console.log('Đang tìm danh mục...');
+                            const danhMuc = await timDanhMucTuMaMon(maMon);
+                            console.log('Danh mục tìm được:', danhMuc);
                             
-                            // Gọi hàm thêm vào giỏ hàng với thông tin đã nhập
-                            themVaoGioHang(maMon, targetElement, soLuong);
+                            if (!danhMuc) {
+                                alert("Không tìm thấy danh mục món ăn!");
+                                return;
+                            }
                             
-                            // Đóng modal sau khi thêm
-                            modal.style.display = "none";
+                            // 2. Lấy thông tin món
+                            console.log(`Đang lấy món ${maMon} từ danh mục ${danhMuc}...`);
+                            const monAn = await layMonAn(danhMuc, maMon);
+                            console.log('Thông tin món:', monAn);
                             
-                            // Reset giá trị input
+                            if (!monAn) {
+                                alert(`Món ${maMon} không tồn tại trong danh mục ${danhMuc}`);
+                                return;
+                            }
+                            
+                            // 3. Hiển thị modal
+                            const modal = document.getElementById("them-vao-gio-modal");
+                            modal.style.display = "flex";
+                            modal.classList.add("show");
+                            
+                            // Hiển thị thông tin món
+                            document.getElementById("ma-mon").value = maMon;
+                            document.getElementById("ten-mon").value = monAn.TenMon;
+                            document.getElementById("gia-mon").value = Gia.toLocaleString('vi-VN');
+                            
+                            // Reset số lượng
                             document.getElementById("so-luong").value = 1;
-                        };
-                        
-                        // Thêm sự kiện đóng modal khi click vào nút close
-                        modal.querySelector(".close").onclick = function() {
-                            modal.style.display = "none";
-                            document.getElementById("so-luong").value = 1;
-                        };
+                            
+                            // 4. Xử lý nút xác nhận
+                            document.getElementById("btn-xac-nhan").onclick = function() {
+                                const soLuong = parseInt(document.getElementById("so-luong").value) || 1;
+                                themVaoGioHang(maMon, targetElement, soLuong);
+                                modal.style.display = "none";
+                                modal.classList.remove("show");
+                            };
+                            
+                            // 5. Xử lý nút đóng modal
+                            modal.querySelector(".close").onclick = function() {
+                                modal.style.display = "none";
+                                modal.classList.remove("show");
+                            };
+                            
+                        } catch (error) {
+                            console.error("Lỗi khi thêm vào giỏ:", error);
+                            alert("Có lỗi xảy ra khi thêm vào giỏ!");
+                        }
                     }
                 });
 
