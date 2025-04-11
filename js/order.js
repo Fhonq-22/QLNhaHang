@@ -74,10 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("overlay").classList.remove("hidden");
         })
     });
-    document.getElementById("dong-gio-hang").addEventListener("click", () => {
+    document.getElementById("gio-hang-modal").querySelector(".close").onclick = function() {
         document.getElementById("gio-hang-modal").classList.add("hidden");
         document.getElementById("overlay").classList.add("hidden");
-    });
+    };
 
     function hienThiGioHang() {
         document.getElementById("gio-hang-chi-tiet").innerHTML = Object.keys(gioHang).length === 0
@@ -301,42 +301,39 @@ document.addEventListener("DOMContentLoaded", function () {
                         const targetElement = e.target;
                         
                         try {
-                            // 1. Tìm danh mục
-                            console.log('Đang tìm danh mục...');
                             const danhMuc = await timDanhMucTuMaMon(maMon);
-                            console.log('Danh mục tìm được:', danhMuc);
-                            
                             if (!danhMuc) {
                                 alert("Không tìm thấy danh mục món ăn!");
                                 return;
                             }
-                            
-                            // 2. Lấy thông tin món
-                            console.log(`Đang lấy món ${maMon} từ danh mục ${danhMuc}...`);
                             const monAn = await layMonAn(danhMuc, maMon);
-                            console.log('Thông tin món:', monAn);
-                            
                             if (!monAn) {
                                 alert(`Món ${maMon} không tồn tại trong danh mục ${danhMuc}`);
                                 return;
                             }
-                            
-                            // 3. Hiển thị modal
                             const modal = document.getElementById("them-vao-gio-modal");
                             modal.style.display = "flex";
                             modal.classList.add("show");
                             
-                            // Hiển thị thông tin món
                             document.getElementById("ma-mon").value = maMon;
                             document.getElementById("ten-mon").value = monAn.TenMon;
-                            document.getElementById("gia-mon").value = Gia.toLocaleString('vi-VN');
-                            
-                            // Reset số lượng
+                            document.getElementById("gia-mon").value = monAn.Gia.toLocaleString('vi-VN');
                             document.getElementById("so-luong").value = 1;
+
+                            // Thêm sự kiện input
+                            document.getElementById("so-luong").addEventListener('input', () => {
+                                let soLuong = parseInt(document.getElementById("so-luong").value);
+                                document.getElementById("gia-mon").value = (monAn.Gia * soLuong).toLocaleString('vi-VN');
+                            });
                             
                             // 4. Xử lý nút xác nhận
                             document.getElementById("btn-xac-nhan").onclick = function() {
-                                const soLuong = parseInt(document.getElementById("so-luong").value) || 1;
+                                const soLuong = parseInt(document.getElementById("so-luong").value);
+                                if(isNaN(soLuong) || soLuong<1){
+                                    alert("Số lượng không hợp lệ!");
+                                    document.getElementById("so-luong").focus();
+                                    return;
+                                }
                                 themVaoGioHang(maMon, targetElement, soLuong);
                                 modal.style.display = "none";
                                 modal.classList.remove("show");
@@ -356,6 +353,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
                 fragment.appendChild(monAnDiv);
+                window.scrollTo({ top: 0, behavior: "smooth" });
             });
 
             danhSachMonAn.appendChild(fragment);

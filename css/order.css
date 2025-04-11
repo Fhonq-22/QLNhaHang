@@ -607,20 +607,20 @@ footer {
 }
 
 /* Group input và label trên cùng một hàng */
-.input-group {
+.input-group, .output-group {
     display: flex;
     align-items: center;
     margin-top: 10px;
 }
 
-.input-group label {
+.input-group label, .output-group label {
     flex: 1;
     font-weight: bold;
     margin-right: 10px;
     text-align: left;
 }
 
-.input-group input {
+.input-group input, .output-group input {
     flex: 9;
     padding: 8px;
     border: 1px solid #ccc;
@@ -629,10 +629,17 @@ footer {
 }
 
 /* Input bị khóa */
-.input-group input[disabled] {
+.input-group input[disabled], .output-group input[disabled]{
     background: #f5f5f5;
     color: #888;
     cursor: not-allowed;
+}
+
+.output-group label{
+    flex: 3;
+}
+.output-group input{
+    flex: 7;
 }
 
 /* Nút */
@@ -644,28 +651,21 @@ footer {
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition:  0.3s ease-in-out;
+    color: white;
+    background: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);
+}
+
+.modal-content button:hover{
+    transform: scale(1.1);
 }
 
 #btn-cap-nhat {
     background: #28a745;
-    color: white;
 }
-
-#btn-cap-nhat:hover {
-    background: #218838;
-}
-
 #btn-logout {
     background: #dc3545;
-    color: white;
 }
-
-#btn-logout:hover {
-    background: #c82333;
-}
-
-
 
 .fly-item {
     position: fixed;
@@ -713,6 +713,19 @@ footer {
     justify-content: space-between;
     padding: 8px;
     border-bottom: 1px solid #ddd;
+}
+
+#gio-hang-modal button#dat-mon {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition:  0.3s ease-in-out;
+    color: white;
+    background: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);
 }
 
 .hidden {
