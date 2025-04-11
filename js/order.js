@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector('a#gio-hang-open i span.so-luong-gio-hang').textContent = Object.values(gioHang).reduce((acc, sl) => acc + sl, 0);
     }
 
-    function themVaoGioHang(maMon, btnBatDau) {
+    function themVaoGioHang(maMon, btnBatDau, soLuong=1) {
         if (!btnBatDau || !document.querySelector("#gio-hang-icon")) {
             console.error("LỖI: Không tìm thấy phần tử!");
             return;
@@ -61,7 +61,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 50);
         setTimeout(() => {
             flyItem.remove();
-            gioHang[maMon] = (gioHang[maMon] || 0) + 1;
+            gioHang[maMon] = (gioHang[maMon] || 0) + parseInt(soLuong);
+            console.log(gioHang);
             capNhatSoLuongGioHang();
         }, 1000);
     }
@@ -172,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
     });
 
-    document.querySelector(".close").addEventListener("click", function () {
+    userModal.querySelector(".close").addEventListener("click", function () {
         userModal.style.display = "none";
         userModal.classList.remove("show");
 
@@ -239,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
     layDanhSachDanhMucUI();
     // #endregion
 
-    // #region Products-display: Hiển thị món ăn
+    // #region Products-display: Hiển thị món ăn, mở modal thêm món vào giỏ
     const danhSachMonAn = document.getElementById("danh-sach-mon-an");
 
     async function hienThiDanhSachMonAnUI(danhMucDaChon = "tat-ca", tuKhoaTimKiem = "") {
@@ -287,11 +288,45 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
                 monAnDiv.querySelector(".them-1-vao-gio").addEventListener("click", function () {
-                    themVaoGioHang(MaMon, this);
+                    themVaoGioHang(MaMon, this, 1);
                 });
 
+                // monAnDiv.querySelector(".them-vao-gio").addEventListener("click", (e) => {
+                //     if (e.target.classList.contains("them-vao-gio")) themVaoGioHang(e.target.dataset.mamon, e.target);
+                // });
+
                 monAnDiv.querySelector(".them-vao-gio").addEventListener("click", (e) => {
-                    if (e.target.classList.contains("them-vao-gio")) themVaoGioHang(e.target.dataset.mamon, e.target);
+                    if (e.target.classList.contains("them-vao-gio")) {
+                        // Lưu thông tin món ăn vào biến tạm
+                        const maMon = e.target.dataset.mamon;
+                        const targetElement = e.target;
+                        
+                        // Hiển thị modal
+                        const modal = document.getElementById("them-vao-gio-modal");
+                        modal.style.display = "flex";
+                        modal.classList.add("show");
+                        
+                        // Thêm sự kiện cho nút xác nhận trong modal
+                        document.getElementById("btn-xac-nhan").onclick = function() {
+                            // Lấy giá trị từ input
+                            const soLuong = document.getElementById("so-luong").value;
+                            
+                            // Gọi hàm thêm vào giỏ hàng với thông tin đã nhập
+                            themVaoGioHang(maMon, targetElement, soLuong);
+                            
+                            // Đóng modal sau khi thêm
+                            modal.style.display = "none";
+                            
+                            // Reset giá trị input
+                            document.getElementById("so-luong").value = 1;
+                        };
+                        
+                        // Thêm sự kiện đóng modal khi click vào nút close
+                        modal.querySelector(".close").onclick = function() {
+                            modal.style.display = "none";
+                            document.getElementById("so-luong").value = 1;
+                        };
+                    }
                 });
 
                 fragment.appendChild(monAnDiv);

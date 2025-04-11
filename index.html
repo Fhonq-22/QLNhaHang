@@ -180,6 +180,32 @@
             <button id="dong-gio-hang">Đóng</button>
         </div>
 
+        <div id="them-vao-gio-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Thêm món vào giỏ</h2>
+                <div class="input-group">
+                    <label><i class='bx bx-barcode'></i></label> <!-- Icon mã món -->
+                    <input type="text" id="ma-mon" placeholder="Mã món">
+                </div>
+                <div class="input-group">
+                    <label><i class='bx bx-food-menu'></i></label> <!-- Icon tên món -->
+                    <input type="text" id="ten-mon" placeholder="Tên món">
+                </div>
+                <div class="input-group">
+                    <label><i class='bx bx-dollar'></i></label> <!-- Icon giá tiền -->
+                    <input type="number" id="gia-mon" min="0" placeholder="Giá món">
+                </div>
+                <div class="input-group">
+                    <label><i class='bx bx-plus-circle'></i></label> <!-- Icon số lượng -->
+                    <input type="number" id="so-luong" value="1" min="1" placeholder="Số lượng">
+                </div>
+                <button id="btn-xac-nhan">
+                    <i class='bx bxs-pencil'></i> Xác nhận
+                </button>
+            </div>
+        </div>
+
         <div id="dat-mon-modal" class="hidden">
             <h2>📦 Đặt Món</h2>
             <label>
