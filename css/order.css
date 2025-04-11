@@ -634,7 +634,11 @@ footer {
     color: #888;
     cursor: not-allowed;
 }
-
+.output-group img{
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+}
 .output-group label{
     flex: 3;
 }

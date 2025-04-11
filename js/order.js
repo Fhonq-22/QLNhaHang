@@ -315,7 +315,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             modal.style.display = "flex";
                             modal.classList.add("show");
                             
-                            document.getElementById("ma-mon").value = maMon;
+                            document.getElementById("anh-mon").src = monAn.HinhAnh;
+                            document.getElementById("anh-mon").alt = monAn.TenMon;
                             document.getElementById("ten-mon").value = monAn.TenMon;
                             document.getElementById("gia-mon").value = monAn.Gia.toLocaleString('vi-VN');
                             document.getElementById("so-luong").value = 1;
