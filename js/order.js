@@ -224,6 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         document.getElementById('price').textContent = formattedValue;
 
+        document.querySelector('.price-slider').value = value;
         const currentCategory = document.getElementById("danh-muc-select").value;
         const currentSearch = document.getElementById("tim-kiem-input").value;
         hienThiDanhSachMonAnUI(currentCategory, currentSearch, value);
@@ -234,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
     document.querySelector(".clear-btn").addEventListener("click", () => {
         document.getElementById("tim-kiem-input").value = "";
-        document.getElementById("danh-muc-select").value = "Tất cả";
+        document.getElementById("danh-muc-select").value = "tat-ca";
         document.querySelector(".price-slider").value = document.querySelector(".price-slider").max;
         document.getElementById('price').textContent = 
             parseInt(document.querySelector(".price-slider").max).toLocaleString('vi-VN') + ' ₫';
