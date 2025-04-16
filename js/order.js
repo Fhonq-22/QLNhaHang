@@ -421,7 +421,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
             alert("Đặt món thành công!");
             gioHang = {};
-            luuGioHang();
+            capNhatSoLuongGioHang();
             hienThiGioHang();
             document.getElementById("dat-mon-modal").classList.add("hidden");
         } catch (error) {
